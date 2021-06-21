@@ -1,12 +1,20 @@
+import React from "react";
+import ReactDOM from "react-dom";
+
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
     const mountPoint = document.createElement("span");
     this.attachShadow({ mode: "open" }).appendChild(mountPoint);
 
-    const name = this.getAttribute("name");
-    const url = "https://www.google.com/search?q=" + encodeURIComponent(name);
-    ReactDOM.render(<a href={url}>{name}</a>, mountPoint);
+    const { scopedData } = JSON.parse(this.getAttribute("context"));
+    const url =
+      "https://www.google.com/search?q=" +
+      encodeURIComponent(scopedData.user.primaryEmail);
+    ReactDOM.render(
+      <a href={url}>{scopedData.user.primaryEmail}</a>,
+      mountPoint,
+    );
   }
 }
 
-customElements.define("happeo-custom-widget", happeoCustomReactWidget);
+customElements.define("mika-testaa1", happeoCustomReactWidget);

@@ -1,12 +1,17 @@
+import React from "react";
+import ReactDOM from "react-dom";
+
+import Widget from "./src/Widget";
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
     const mountPoint = document.createElement("span");
     this.attachShadow({ mode: "open" }).appendChild(mountPoint);
 
-    const name = this.getAttribute("name");
-    const url = "https://www.google.com/search?q=" + encodeURIComponent(name);
-    ReactDOM.render(<a href={url}>{name}</a>, mountPoint);
+    const widgetId = this.getAttribute("widgetId");
+    const preview = this.getAttribute("preview");
+
+    ReactDOM.render(<Widget preview={preview} id={widgetId} />, mountPoint);
   }
 }
 
-customElements.define("happeo-custom-widget", happeoCustomReactWidget);
+window.customElements.define("happeo-custom-widget", happeoCustomReactWidget);

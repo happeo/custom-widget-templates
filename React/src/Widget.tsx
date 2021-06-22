@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { init, getWidgetContext } from "@happeo/widget-sdk";
 
-const Widget = ({ id, preview }) => {
+interface Props {
+  id: string;
+  preview: boolean;
+}
+
+const Widget = ({ id, preview }: Props) => {
   const [initialized, setInitialized] = useState(true);
 
   useEffect(() => {

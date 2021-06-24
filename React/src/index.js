@@ -1,18 +1,17 @@
-import React from "react";
-import ReactDOM from "react-dom";
+const React = window.React;
+const ReactDOM = window.ReactDOM;
 
 import Widget from "./Widget";
 
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
-    const mountPoint = document.createElement("span");
-    this.attachShadow({ mode: "open" }).appendChild(mountPoint);
-
+    const mountPoint = document.getElementsByTagName(slug)[0];
     const widgetId = this.getAttribute("widgetId") || "";
-    const preview = Boolean(this.getAttribute("preview"));
-
-    ReactDOM.render(<Widget preview={preview} id={widgetId} />, mountPoint);
+    ReactDOM.render(<Widget id={widgetId} />, mountPoint);
   }
 }
 
-window.customElements.define("mika-testaa-74a18702", happeoCustomReactWidget);
+const slug = "custom-widget-slug";
+
+window.customElements.get(slug) ||
+  window.customElements.define(slug, happeoCustomReactWidget);

@@ -3,7 +3,9 @@ import widgetSDK from "@happeo/widget-sdk";
 const React = window.React;
 const styled = window.styled;
 const { happeo, uikit } = widgetSDK;
+
 console.log(styled, happeo, uikit);
+
 const Widget = ({ id }) => {
   const [initialized, setInitialized] = React.useState(false);
   const [context, setContext] = React.useState({});
@@ -30,8 +32,8 @@ const Widget = ({ id }) => {
 
   return (
     <Container>
-      <uikit.typography.TextAlpha>
-        Custom widget example
+      <uikit.typography.TextAlpha style={{ marginBottom: "8px" }}>
+        Custom widget example 123
       </uikit.typography.TextAlpha>
       <uikit.typography.TextDelta>User</uikit.typography.TextDelta>
       {user.name.fullName && (
@@ -52,6 +54,7 @@ const Widget = ({ id }) => {
         {JSON.stringify(content)}
       </uikit.typography.BodyUI>
       <uikit.buttons.ButtonPrimary
+        icon={uikit.icons.IconClose}
         text="Update content"
         onClick={() => {
           happeo.widget.setContent("Test", {

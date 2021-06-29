@@ -11,50 +11,36 @@ import {
 } from "react-accessible-accordion";
 
 import { Tooltip } from "@happeouikit/tooltip";
-import { Input } from "@happeouikit/form-elements";
 import { IconChevronRight, IconAdd, IconDelete } from "@happeouikit/icons";
 import { padding300, margin300, margin200 } from "@happeouikit/layout";
-import { TextEpsilon } from "@happeouikit/typography";
 import { ButtonSecondary, IconButton } from "@happeouikit/buttons";
 import { gray08, gray09 } from "@happeouikit/colors";
 import { Loader } from "@happeouikit/loaders";
 import { ContentRenderer } from "@happeouikit/content-renderer";
+import { WIDGET_SETTINGS } from "./constants";
+import { divideDataIntoRows, parseStringJSON } from "./utils";
 
 const { happeo, uikit } = widgetSDK;
 
-const parseStringJSON = (string = "", defaultVal) => {
-  if (string.length === 0) {
-    return defaultVal;
-  }
-  try {
-    return JSON.parse(string);
-  } catch (_e) {
-    return defaultVal;
-  }
-};
-
-const EditRow = ({ item, onItemUpdated, removeRow }) => {
-  const [title, setTitle] = useState(item.title);
-
+const EditRow = ({ item, settings, onItemUpdated, removeRow }) => {
+  console.log("EditRow");
   return (
-    <EditableAccordionItem>
-      <EditableAccordionTitle>
+    <>
+      <EditableAccordionTitle
+        style={{ backgroundColor: settings?.headerBackgroundColor }}
+      >
         <IconChevronRight
           className="accordion__icon--expand"
           width={24}
           height={24}
-          style={{ marginRight: margin300 }}
+          style={{ marginRight: margin300, flexShrink: 0 }}
         />
-        <TextEpsilon style={{ width: "100%" }}>
-          <Input
-            value={title}
-            placeholder="Add title"
-            onChange={(e) => {
-              setTitle(e.target.value);
-              onItemUpdated(item.id, "title", e.target.value);
-            }}
-          />
-        </TextEpsilon>
+        <uikit.RichTextEditor
+          type="full"
+          placeholder="Add title"
+          content={item[0]}
+          onContentChanged={onItemUpdated}
+        />
         <IconButton
           icon={IconDelete}
           onMouseDown={() => removeRow(item.id)}
@@ -66,69 +52,37 @@ const EditRow = ({ item, onItemUpdated, removeRow }) => {
         />
         <Tooltip id={`${item.id}-tooltip`} />
       </EditableAccordionTitle>
-      <EditableAccordionContent>
+      <EditableAccordionContent
+        style={{ backgroundColor: settings?.contentBackgroundColor }}
+      >
         <uikit.RichTextEditor
           type="full"
           placeholder="Add content"
-          content={item.content}
-          onContentChanged={function () {
-            const editorContent = this.el.getContent();
-            onItemUpdated(item.id, "content", editorContent);
-          }}
+          content={item[1]}
+          onContentChanged={onItemUpdated}
         />
       </EditableAccordionContent>
-    </EditableAccordionItem>
+    </>
   );
 };
 
-const EditableAccordion = styled.div``;
-const EditableAccordionItem = styled.div``;
-const EditableAccordionTitle = styled.div`
-  padding: ${padding300};
-  display: flex; 
-  flex-wrap; nowrap;
-  align-items: center;
-  background-color: ${gray08};
-  .accordion__icon--expand {
-    transform: rotate(90deg);
-  }
-  input {
-    background-color: transparent;
-    height: auto;
-    border: 0;
-    padding: 0;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-    letter-spacing: inherit;
-    color: inherit;
-  }
-`;
-const EditableAccordionContent = styled.div`
-  padding: ${padding300};
-  background-color: ${gray09};
-`;
-
 const Widget = ({ id, editMode }) => {
-  console.log("WIDGET RENDERING");
+  const editRef = useRef();
   const [initialized, setInitialized] = useState(false);
   const [items, setItems] = useState([]);
-  // const [editableItems, setEditableItems] = useState([]);
-  const editableItems = useRef();
+  const [edidableItems, setEditableItems] = useState([]);
+  const [settings, setSettings] = useState({});
 
   useEffect(() => {
     const doInit = async () => {
       await happeo.init(id);
+      happeo.widget.declareSettings(WIDGET_SETTINGS, setSettings);
+
       setInitialized(true);
       const widgetContent = await happeo.widget.getContent();
       const parsedContent = parseStringJSON(widgetContent, []);
-      const buildItems = parsedContent.map((item, index) => ({
-        ...item,
-        id: item.id || Date.now() + index,
-      }));
-      editableItems.current = buildItems;
-      setItems(buildItems);
+      const dividedContent = divideDataIntoRows(parsedContent);
+      setItems(dividedContent);
 
       if (editMode && parsedContent.length === 0) {
         addRow();
@@ -137,41 +91,25 @@ const Widget = ({ id, editMode }) => {
     doInit();
   }, [editMode, id]);
 
-  const onItemUpdated = debounce(async (id, key, content) => {
-    const newItems = editableItems.current.map((rowItem) => {
-      if (rowItem.id === id) {
-        return {
-          ...rowItem,
-          [key]: content,
-        };
-      }
-      return rowItem;
-    });
-    editableItems.current = newItems;
-
-    await happeo.widget.setContent(
-      JSON.stringify(
-        newItems.map(({ content, title }) => ({
-          title,
-          content,
-        })),
-      ),
-    );
-  }, 1000);
+  const onItemUpdated = debounce(
+    () => {
+      const data = [];
+      editRef.current.querySelectorAll(`.fr-element`).forEach((el) => {
+        data.push(el.getContent());
+      });
+      happeo.widget.setContent(JSON.stringify(data));
+    },
+    1000,
+    { leading: false, trailing: true },
+  );
 
   const removeRow = (id) => {
     setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setEditableItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   const addRow = () => {
-    setItems((prevItems) => [
-      ...prevItems,
-      {
-        id: Date.now(),
-        title: "",
-        content: "",
-      },
-    ]);
+    setItems((prevItems) => [...prevItems, ["", ""]]);
   };
 
   if (!initialized) {
@@ -183,35 +121,44 @@ const Widget = ({ id, editMode }) => {
       <div className="custom-font-styles">
         {editMode ? (
           <uikit.ProviderWrapper>
-            <EditableAccordion>
-              {items.map((item) => (
+            <div ref={editRef}>
+              {items.map((item, index) => (
                 <EditRow
-                  key={item.id}
+                  key={index}
                   item={item}
                   onItemUpdated={onItemUpdated}
                   removeRow={removeRow}
+                  settings={settings}
                 />
               ))}
-            </EditableAccordion>
+            </div>
           </uikit.ProviderWrapper>
         ) : (
-          <Accordion allowMultipleExpanded allowZeroExpanded>
-            {items.map((item) => (
-              <AccordionItem key={item.id}>
+          <Accordion
+            allowMultipleExpanded
+            allowZeroExpanded
+            settings={settings}
+          >
+            {items.map((item, index) => (
+              <AccordionItem key={index}>
                 <AccordionItemHeading>
-                  <AccordionItemButton>
+                  <AccordionItemButton
+                    style={{ backgroundColor: settings?.headerBackgroundColor }}
+                  >
                     <IconChevronRight
                       className="accordion__icon--expand"
                       width={24}
                       height={24}
-                      style={{ marginRight: margin300 }}
+                      style={{ marginRight: margin300, flexShrink: 0 }}
                     />
 
-                    <TextEpsilon>{item.title}</TextEpsilon>
+                    <ContentRenderer content={item[0]} type="html" />
                   </AccordionItemButton>
                 </AccordionItemHeading>
-                <AccordionItemPanel>
-                  <ContentRenderer content={item.content} type="html" />
+                <AccordionItemPanel
+                  style={{ backgroundColor: settings?.contentBackgroundColor }}
+                >
+                  <ContentRenderer content={item[1]} type="html" />
                 </AccordionItemPanel>
               </AccordionItem>
             ))}
@@ -232,12 +179,6 @@ const Widget = ({ id, editMode }) => {
 };
 
 const Container = styled.div`
-  .accordion {
-  }
-  .accordion__item {
-  }
-  .accordion__heading {
-  }
   .accordion__button {
     cursor: pointer;
     padding: ${padding300};
@@ -253,11 +194,34 @@ const Container = styled.div`
     .accordion__icon--expand {
       transition: transform 120ms ease-in-out;
     }
+    h1,
+    h2,
+    h3,
+    p {
+      margin-bottom: 0;
+    }
   }
   .accordion__panel {
     padding: ${padding300};
     background-color: ${gray09};
   }
+`;
+const EditableAccordionTitle = styled.div`
+  padding: ${padding300};
+  display: flex; 
+  flex-wrap; nowrap;
+  align-items: center;
+  background-color: ${gray08};
+  .accordion__icon--expand {
+    transform: rotate(90deg);
+  }
+  h1, h2, h3, p {
+    margin-bottom: 0;
+  }
+`;
+const EditableAccordionContent = styled.div`
+  padding: ${padding300};
+  background-color: ${gray09};
 `;
 
 export default Widget;

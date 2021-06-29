@@ -22,55 +22,51 @@ import { divideDataIntoRows, parseStringJSON } from "./utils";
 
 const { happeo, uikit } = widgetSDK;
 
-const EditRow = ({ item, settings, onItemUpdated, removeRow }) => {
-  console.log("EditRow");
-  return (
-    <>
-      <EditableAccordionTitle
-        style={{ backgroundColor: settings?.headerBackgroundColor }}
-      >
-        <IconChevronRight
-          className="accordion__icon--expand"
-          width={24}
-          height={24}
-          style={{ marginRight: margin300, flexShrink: 0 }}
-        />
-        <uikit.RichTextEditor
-          type="full"
-          placeholder="Add title"
-          content={item[0]}
-          onContentChanged={onItemUpdated}
-        />
-        <IconButton
-          icon={IconDelete}
-          onMouseDown={() => removeRow(item.id)}
-          type="alert"
-          isActionIcon
-          aria-label="Remove row"
-          data-tip={"Remove row"}
-          data-for={`${item.id}-tooltip`}
-        />
-        <Tooltip id={`${item.id}-tooltip`} />
-      </EditableAccordionTitle>
-      <EditableAccordionContent
-        style={{ backgroundColor: settings?.contentBackgroundColor }}
-      >
-        <uikit.RichTextEditor
-          type="full"
-          placeholder="Add content"
-          content={item[1]}
-          onContentChanged={onItemUpdated}
-        />
-      </EditableAccordionContent>
-    </>
-  );
-};
+const EditRow = ({ item, settings, index, onItemUpdated, removeRow }) => (
+  <>
+    <EditableAccordionTitle
+      style={{ backgroundColor: settings?.headerBackgroundColor }}
+    >
+      <IconChevronRight
+        className="accordion__icon--expand"
+        width={24}
+        height={24}
+        style={{ marginRight: margin300, flexShrink: 0 }}
+      />
+      <uikit.RichTextEditor
+        type="full"
+        placeholder="Add title"
+        content={item[0]}
+        onContentChanged={onItemUpdated}
+      />
+      <IconButton
+        icon={IconDelete}
+        onMouseDown={() => removeRow(index)}
+        type="alert"
+        isActionIcon
+        aria-label="Remove row"
+        data-tip={"Remove row"}
+        data-for={`${index}-tooltip`}
+      />
+      <Tooltip id={`${index}-tooltip`} />
+    </EditableAccordionTitle>
+    <EditableAccordionContent
+      style={{ backgroundColor: settings?.contentBackgroundColor }}
+    >
+      <uikit.RichTextEditor
+        type="full"
+        placeholder="Add content"
+        content={item[1]}
+        onContentChanged={onItemUpdated}
+      />
+    </EditableAccordionContent>
+  </>
+);
 
 const Widget = ({ id, editMode }) => {
   const editRef = useRef();
   const [initialized, setInitialized] = useState(false);
   const [items, setItems] = useState([]);
-  const [edidableItems, setEditableItems] = useState([]);
   const [settings, setSettings] = useState({});
 
   useEffect(() => {
@@ -78,11 +74,12 @@ const Widget = ({ id, editMode }) => {
       await happeo.init(id);
       happeo.widget.declareSettings(WIDGET_SETTINGS, setSettings);
 
-      setInitialized(true);
       const widgetContent = await happeo.widget.getContent();
+
       const parsedContent = parseStringJSON(widgetContent, []);
       const dividedContent = divideDataIntoRows(parsedContent);
       setItems(dividedContent);
+      setInitialized(true);
 
       if (editMode && parsedContent.length === 0) {
         addRow();
@@ -99,13 +96,12 @@ const Widget = ({ id, editMode }) => {
       });
       happeo.widget.setContent(JSON.stringify(data));
     },
-    1000,
+    200,
     { leading: false, trailing: true },
   );
 
-  const removeRow = (id) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-    setEditableItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  const removeRow = (index) => {
+    setItems((prevItems) => prevItems.filter((_, i) => i !== index));
   };
 
   const addRow = () => {
@@ -126,6 +122,7 @@ const Widget = ({ id, editMode }) => {
                 <EditRow
                   key={index}
                   item={item}
+                  index={index}
                   onItemUpdated={onItemUpdated}
                   removeRow={removeRow}
                   settings={settings}

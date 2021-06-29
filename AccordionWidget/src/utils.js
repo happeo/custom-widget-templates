@@ -1,6 +1,5 @@
 export const parseStringJSON = (string = "", defaultVal) => {
-  console.log("ST", string);
-  if (string.length === 0) {
+  if (!string || string?.length === 0) {
     return defaultVal;
   }
   try {
@@ -10,7 +9,7 @@ export const parseStringJSON = (string = "", defaultVal) => {
   }
 };
 
-export const divideDataIntoRows = (data) =>
+export const divideDataIntoRows = (data = []) =>
   data.reduce((resultArray, item, index) => {
     const chunkIndex = Math.floor(index / 2);
 

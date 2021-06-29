@@ -3,12 +3,16 @@ import Widget from "./Widget";
 
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
-    const mountPoint = document.getElementsByTagName(slug)[0];
     const widgetId = this.getAttribute("widgetId") || "";
+    const uniqueId = this.getAttribute("uniqueId") || "";
     const editMode = this.getAttribute("editMode") || "";
     ReactDOM.render(
-      <Widget id={widgetId} editMode={editMode === "true"} />,
-      mountPoint,
+      <Widget
+        id={uniqueId}
+        widgetId={widgetId}
+        editMode={editMode === "true"}
+      />,
+      this,
     );
   }
 }

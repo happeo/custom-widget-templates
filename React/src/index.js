@@ -1,17 +1,22 @@
-const React = window.React;
-const ReactDOM = window.ReactDOM;
-
-import Widget from "./Widget";
+import React from "react";
+import AccordionWidget from "./AccordionWidget";
 
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
-    const mountPoint = document.getElementsByTagName(slug)[0];
     const widgetId = this.getAttribute("widgetId") || "";
-    ReactDOM.render(<Widget id={widgetId} />, mountPoint);
+    const uniqueId = this.getAttribute("uniqueId") || "";
+    const editMode = this.getAttribute("editMode") || "";
+    ReactDOM.render(
+      <AccordionWidget
+        id={uniqueId}
+        widgetId={widgetId}
+        editMode={editMode === "true"}
+      />,
+      this,
+    );
   }
 }
-
-const slug = "henna-testaa-8ntvyep6n4t9r536eo5n";
+const slug = "my-widget-slug";
 
 window.customElements.get(slug) ||
   window.customElements.define(slug, happeoCustomReactWidget);

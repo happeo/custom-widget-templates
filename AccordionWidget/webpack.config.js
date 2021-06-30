@@ -23,13 +23,6 @@ module.exports = (env) => {
             },
           },
         },
-        {
-          test: /\.css$/,
-          use: [
-            { loader: "react-web-component-style-loader" },
-            { loader: "css-loader" },
-          ],
-        },
       ],
     },
     devServer: {

@@ -33,6 +33,24 @@ module.exports = (env) => {
     resolve: {
       extensions: [".tsx", ".ts", ".js"],
     },
+    externals: [
+      (_context, request, callback) => {
+        if (/^@happeouikit/.test(request)) {
+          // Resolve @happeoukit as externals in window
+          return callback(null, [
+            "Happeouikit",
+            request.replace("@happeouikit/", ""),
+          ]);
+        }
+        callback();
+      },
+      {
+        react: "React",
+        "react-dom": "ReactDOM",
+        "styled-components": "styled",
+        jQuery: "jQuery",
+      },
+    ],
     output: {
       filename: "bundle.js",
       path: path.resolve(__dirname, "dist"),

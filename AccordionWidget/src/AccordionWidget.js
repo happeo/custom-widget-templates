@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import debounce from "lodash.debounce";
 import widgetSDK from "@happeo/widget-sdk";
@@ -15,7 +15,6 @@ import { IconChevronRight, IconAdd, IconDelete } from "@happeouikit/icons";
 import { padding300, margin300, margin200 } from "@happeouikit/layout";
 import { ButtonSecondary, IconButton } from "@happeouikit/buttons";
 import { gray08, gray09 } from "@happeouikit/colors";
-import { Loader } from "@happeouikit/loaders";
 import { ContentRenderer } from "@happeouikit/content-renderer";
 import { WIDGET_SETTINGS } from "./constants";
 import { divideDataIntoRows, parseStringJSON } from "./utils";
@@ -63,7 +62,7 @@ const EditRow = ({ item, settings, index, onItemUpdated, removeRow }) => (
   </>
 );
 
-const Widget = ({ id, editMode }) => {
+const AccordionWidget = ({ id, editMode }) => {
   const editRef = useRef();
   const [initialized, setInitialized] = useState(false);
   const [items, setItems] = useState([]);
@@ -71,9 +70,19 @@ const Widget = ({ id, editMode }) => {
 
   useEffect(() => {
     const doInit = async () => {
+      // Init API, use uniqueId for the initialisation as this widget may be present multiple times in a page
       await happeo.init(id);
+
+      // After init, declare settings that are displayed to the user, add setSettings as the callback
       happeo.widget.declareSettings(WIDGET_SETTINGS, setSettings);
 
+      /**
+       * Get widget content. This is stringified array
+       * We use a pure array to store data since content field is indexed directly
+       * and array poses the lease amount of unnecessary data to the index. As an
+       * example, if this would be an object, the object keys would be indexed and
+       * searchable
+       */
       const widgetContent = await happeo.widget.getContent();
 
       const parsedContent = parseStringJSON(widgetContent, []);
@@ -91,6 +100,11 @@ const Widget = ({ id, editMode }) => {
   const onItemUpdated = debounce(
     () => {
       const data = [];
+      /**
+       * Instead of saving this data to state, we just want to loop through the editors.
+       * This prevents the editors themselves re-rendering as that causes caret position
+       * jumping and loosing of the undo-stack
+       */
       editRef.current.querySelectorAll(`.fr-element`).forEach((el) => {
         data.push(el.getContent());
       });
@@ -109,11 +123,13 @@ const Widget = ({ id, editMode }) => {
   };
 
   if (!initialized) {
-    return <Loader />;
+    // We don't want to show any loaders
+    return null;
   }
 
   return (
     <Container>
+      {/* className "custom-font-styles" targets pages custom styles to the components below */}
       <div className="custom-font-styles">
         {editMode ? (
           <uikit.ProviderWrapper>
@@ -221,4 +237,4 @@ const EditableAccordionContent = styled.div`
   background-color: ${gray09};
 `;
 
-export default Widget;
+export default AccordionWidget;

@@ -1,94 +1,58 @@
+import React, { useEffect } from "react";
+import styled from "styled-components";
 import widgetSDK from "@happeo/widget-sdk";
 
-const React = window.React;
-const styled = window.styled;
-const { happeo, uikit } = widgetSDK;
+import { LinkExternal } from "@happeouikit/form-elements";
+import { padding300 } from "@happeouikit/layout";
+import { gray09 } from "@happeouikit/colors";
 
-console.log(styled, happeo, uikit);
+const { happeo } = widgetSDK;
 
-const Widget = ({ id }) => {
-  const [initialized, setInitialized] = React.useState(false);
-  const [context, setContext] = React.useState({});
-  const [content, setContent] = React.useState({});
-  const [jwt, setJWT] = React.useState({});
-  const [user, setUser] = React.useState({ name: { fullName: "" } });
-  const [oAuthStatus, setOAuthStatus] = React.useState("");
-
-  React.useEffect(() => {
+const Widget = ({ id, editMode }) => {
+  useEffect(() => {
     const doInit = async () => {
+      // Init API
       await happeo.init(id);
-      setInitialized(true);
-      setUser(await happeo.user.getCurrentUser());
-      setContext(await happeo.widget.getContext());
-      setContent(await happeo.widget.getContent());
-      setJWT(await happeo.widget.getJWT());
+
+      // Do stuff
     };
     doInit();
-  }, [id]);
-
-  if (!initialized) {
-    return <uikit.loaders.Loader />;
-  }
+  }, [editMode, id]);
 
   return (
     <Container>
-      <uikit.typography.TextAlpha style={{ marginBottom: "8px" }}>
-        Custom widget example 123
-      </uikit.typography.TextAlpha>
-      <uikit.typography.TextDelta>User</uikit.typography.TextDelta>
-      {user.name.fullName && (
-        <UserCard>
-          <uikit.avatar.Avatar user={user} />
-          <uikit.typography.BodyUI style={{ marginLeft: "8px" }}>
-            {user.name.fullName}
-          </uikit.typography.BodyUI>
-        </UserCard>
-      )}
-
-      <uikit.typography.TextDelta>Context</uikit.typography.TextDelta>
-      <uikit.typography.BodyUI>
-        {JSON.stringify(context)}
-      </uikit.typography.BodyUI>
-      <uikit.typography.TextDelta>Content</uikit.typography.TextDelta>
-      <uikit.typography.BodyUI>
-        {JSON.stringify(content)}
-      </uikit.typography.BodyUI>
-      <uikit.buttons.ButtonPrimary
-        icon={uikit.icons.IconClose}
-        text="Update content"
-        onClick={() => {
-          happeo.widget.setContent("Test", {
-            testProp: "This is a test prop",
-          });
-        }}
-      />
-      <uikit.typography.TextDelta>JWT</uikit.typography.TextDelta>
-      <uikit.typography.BodyUI>{JSON.stringify(jwt)}</uikit.typography.BodyUI>
-      <uikit.typography.TextDelta>Start oAuthFlow</uikit.typography.TextDelta>
-      <uikit.buttons.ButtonSecondary
-        text="Start oAuthFlow"
-        onClick={() => {
-          happeo.user
-            .oAuthBegin()
-            .then(() => {
-              setOAuthStatus("Success");
-            })
-            .catch(() => {
-              setOAuthStatus("Failure");
-            });
-        }}
-      />
-      <uikit.typography.BodyUI>
-        Status: {oAuthStatus || "pending status"}
-      </uikit.typography.BodyUI>
+      <TextDelta>Happeo custom widget</TextDelta>
+      <BodyUI>Useful resources</BodyUI>
+      <ul>
+        <li>
+          <BodyUI>
+            <LinkExternal href="https://github.com/happeo/custom-widget-templates">
+              Custom widget templates
+            </LinkExternal>
+          </BodyUI>
+        </li>
+        <li>
+          <BodyUI>
+            <LinkExternal href="https://github.com/happeo/widgets-sdk">
+              Widget SDK
+            </LinkExternal>
+          </BodyUI>
+        </li>
+        <li>
+          <BodyUI>
+            <LinkExternal href="https://uikit.happeo.com/">
+              Happeo UI kit
+            </LinkExternal>
+          </BodyUI>
+        </li>
+      </ul>
     </Container>
   );
 };
 
-const Container = styled.div``;
-const UserCard = styled.div`
-  display: flex;
-  align-items: center;
+const Container = styled.div`
+  padding: ${padding300};
+  background-color: ${gray09};
 `;
 
 export default Widget;

@@ -75,4 +75,4 @@ class PopUpInfo extends HTMLElement {
 }
 
 // Define the new element
-customElements.define("happeo-custom-widget", PopUpInfo);
+customElements.define("my-widget-slug", PopUpInfo);

@@ -5,6 +5,7 @@ import widgetSDK from "@happeo/widget-sdk";
 import { LinkExternal } from "@happeouikit/form-elements";
 import { padding300 } from "@happeouikit/layout";
 import { gray09 } from "@happeouikit/colors";
+import { TextDelta, BodyUI } from "@happeouikit/typography";
 
 const { happeo } = widgetSDK;
 
@@ -15,6 +16,8 @@ const Widget = ({ id, editMode }) => {
       await happeo.init(id);
 
       // Do stuff
+      await happeo.user.getCurrentUser();
+      console.log("I am all good and ready to go!");
     };
     doInit();
   }, [editMode, id]);

@@ -1,5 +1,5 @@
 import React from "react";
-import AccordionWidget from "./AccordionWidget";
+import Widget from "./Widget";
 
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
@@ -7,7 +7,7 @@ class happeoCustomReactWidget extends HTMLElement {
     const uniqueId = this.getAttribute("uniqueId") || "";
     const editMode = this.getAttribute("editMode") || "";
     ReactDOM.render(
-      <AccordionWidget
+      <Widget
         id={uniqueId}
         widgetId={widgetId}
         editMode={editMode === "true"}

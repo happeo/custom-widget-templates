@@ -13,7 +13,7 @@ More details on how to run the code can be found in the folders of the different
 1. You first need to sign in to Happeo as an administrator and create new custom widget.
 2. From the custom widget, select Web Component, give it a name and copy the generated `slug`.
 3. Then you can save the widget and it will be created and is by default in **DEVELOPMENT** -mode.
-4. Check the instructions below: "Running locally" & "Running inside Happeo"
+4. Check the instructions below: "Running locally", "Running inside Happeo" && "Testing built code"
 
 ### Running locally
 
@@ -41,6 +41,15 @@ Now that you have your custom widget created and it is in **DEVELOPMENT** -mode,
 2. Click to add new widget
 3. Select your widget on the list (it has "IN DEVELOPMENT" -tag next to it)
 4. That's it. You are now seeing your local widget inside Happeo.
+
+### Testing build code
+
+Once you have your custom widget created in the admin panel and you have your code, you can analyse the code in the admin panel. To do that:
+
+1. build the code bundle `npm run build`
+2. Open admin panel, custom widgets and your custom widget
+3. Upload your code in the "Upload code" -section
+4. Scroll down to analysis to see if the widget runs successfully
 
 ### Using Widget SDK
 

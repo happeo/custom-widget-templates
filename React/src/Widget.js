@@ -3,7 +3,7 @@ import styled from "styled-components";
 import widgetSDK from "@happeo/widget-sdk";
 
 import { LinkExternal } from "@happeouikit/form-elements";
-import { padding300 } from "@happeouikit/layout";
+import { margin200, padding300 } from "@happeouikit/layout";
 import { gray09 } from "@happeouikit/colors";
 import { TextDelta, BodyUI } from "@happeouikit/typography";
 
@@ -24,9 +24,11 @@ const Widget = ({ id, editMode }) => {
 
   return (
     <Container>
-      <TextDelta>Happeo custom widget</TextDelta>
+      <TextDelta style={{ marginBottom: margin200 }}>
+        Happeo custom widget
+      </TextDelta>
       <BodyUI>Useful resources</BodyUI>
-      <ul>
+      <StyledUl>
         <li>
           <BodyUI>
             <LinkExternal href="https://github.com/happeo/custom-widget-templates">
@@ -48,7 +50,7 @@ const Widget = ({ id, editMode }) => {
             </LinkExternal>
           </BodyUI>
         </li>
-      </ul>
+      </StyledUl>
     </Container>
   );
 };
@@ -56,6 +58,10 @@ const Widget = ({ id, editMode }) => {
 const Container = styled.div`
   padding: ${padding300};
   background-color: ${gray09};
+`;
+const StyledUl = styled.ul`
+  list-style: disc;
+  padding: ${padding300};
 `;
 
 export default Widget;

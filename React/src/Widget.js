@@ -7,16 +7,14 @@ import { margin200, padding300 } from "@happeouikit/layout";
 import { gray09 } from "@happeouikit/colors";
 import { TextDelta, BodyUI } from "@happeouikit/typography";
 
-const { happeo } = widgetSDK;
-
 const Widget = ({ id, editMode }) => {
   useEffect(() => {
     const doInit = async () => {
       // Init API
-      await happeo.init(id);
+      const widgetApi = await widgetSDK.api.init(id);
 
       // Do stuff
-      await happeo.user.getCurrentUser();
+      await widgetApi.getCurrentUser();
       console.log("I am all good and ready to go!");
     };
     doInit();

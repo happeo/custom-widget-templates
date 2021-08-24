@@ -128,7 +128,6 @@ const AccordionWidget = ({ id, editMode }) => {
 
   return (
     <Container>
-      {id}
       {/* className "custom-font-styles" targets pages custom styles to the components below */}
       <div className="custom-font-styles">
         {editMode ? (

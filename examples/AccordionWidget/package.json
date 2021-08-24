@@ -76,7 +76,7 @@
     "@happeouikit/typography": "latest"
   },
   "dependencies": {
-    "@happeo/widget-sdk": "^0.1.17",
+    "@happeo/widget-sdk": "^0.1.21",
     "lodash.debounce": "^4.0.8",
     "react-accessible-accordion": "^3.3.4"
   }

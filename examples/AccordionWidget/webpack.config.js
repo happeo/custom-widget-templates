@@ -28,7 +28,8 @@ module.exports = (env) => {
     devServer: {
       contentBase: "./dist",
       hot: false,
-      inline: false,
+      inline: true,
+      liveReload: true,
     },
     resolve: {
       extensions: [".tsx", ".ts", ".js"],

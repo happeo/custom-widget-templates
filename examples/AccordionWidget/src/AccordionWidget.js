@@ -19,8 +19,6 @@ import { ContentRenderer } from "@happeouikit/content-renderer";
 import { WIDGET_SETTINGS } from "./constants";
 import { divideDataIntoRows, parseStringJSON } from "./utils";
 
-const { happeo, uikit } = widgetSDK;
-
 const EditRow = ({ item, settings, index, onItemUpdated, removeRow }) => (
   <>
     <EditableAccordionTitle
@@ -32,7 +30,7 @@ const EditRow = ({ item, settings, index, onItemUpdated, removeRow }) => (
         height={24}
         style={{ marginRight: margin300, flexShrink: 0 }}
       />
-      <uikit.RichTextEditor
+      <widgetSDK.uikit.RichTextEditor
         type="full"
         placeholder="Add title"
         content={item[0]}
@@ -52,7 +50,7 @@ const EditRow = ({ item, settings, index, onItemUpdated, removeRow }) => (
     <EditableAccordionContent
       style={{ backgroundColor: settings?.contentBackgroundColor }}
     >
-      <uikit.RichTextEditor
+      <widgetSDK.uikit.RichTextEditor
         type="full"
         placeholder="Add content"
         content={item[1]}
@@ -67,14 +65,15 @@ const AccordionWidget = ({ id, editMode }) => {
   const [initialized, setInitialized] = useState(false);
   const [items, setItems] = useState([]);
   const [settings, setSettings] = useState({});
+  const [widgetApi, setWidgetApi] = useState();
 
   useEffect(() => {
     const doInit = async () => {
       // Init API, use uniqueId for the initialisation as this widget may be present multiple times in a page
-      await happeo.init(id);
+      const api = await widgetSDK.api.init(id);
 
       // After init, declare settings that are displayed to the user, add setSettings as the callback
-      happeo.widget.declareSettings(WIDGET_SETTINGS, setSettings);
+      api.declareSettings(WIDGET_SETTINGS, setSettings);
 
       /**
        * Get widget content. This is stringified array
@@ -83,11 +82,11 @@ const AccordionWidget = ({ id, editMode }) => {
        * example, if this would be an object, the object keys would be indexed and
        * searchable
        */
-      const widgetContent = await happeo.widget.getContent();
-
+      const widgetContent = await api.getContent();
       const parsedContent = parseStringJSON(widgetContent, []);
       const dividedContent = divideDataIntoRows(parsedContent);
       setItems(dividedContent);
+      setWidgetApi(api);
       setInitialized(true);
 
       if (editMode && parsedContent.length === 0) {
@@ -108,7 +107,7 @@ const AccordionWidget = ({ id, editMode }) => {
       editRef.current.querySelectorAll(`.fr-element`).forEach((el) => {
         data.push(el.getContent());
       });
-      happeo.widget.setContent(JSON.stringify(data));
+      widgetApi.setContent(JSON.stringify(data));
     },
     200,
     { leading: false, trailing: true },
@@ -129,10 +128,11 @@ const AccordionWidget = ({ id, editMode }) => {
 
   return (
     <Container>
+      {id}
       {/* className "custom-font-styles" targets pages custom styles to the components below */}
       <div className="custom-font-styles">
         {editMode ? (
-          <uikit.ProviderWrapper>
+          <widgetSDK.uikit.ProviderWrapper>
             <div ref={editRef}>
               {items.map((item, index) => (
                 <EditRow
@@ -145,7 +145,7 @@ const AccordionWidget = ({ id, editMode }) => {
                 />
               ))}
             </div>
-          </uikit.ProviderWrapper>
+          </widgetSDK.uikit.ProviderWrapper>
         ) : (
           <Accordion
             allowMultipleExpanded
@@ -178,7 +178,6 @@ const AccordionWidget = ({ id, editMode }) => {
           </Accordion>
         )}
       </div>
-
       {editMode && (
         <ButtonSecondary
           style={{ marginTop: margin200 }}

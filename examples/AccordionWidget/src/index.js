@@ -16,7 +16,7 @@ class happeoCustomReactWidget extends HTMLElement {
     );
   }
 }
-const slug = "anteros-test-kgatq4ll9rkqlwpe23de";
+const slug = "add-slug-here";
 
 window.customElements.get(slug) ||
   window.customElements.define(slug, happeoCustomReactWidget);

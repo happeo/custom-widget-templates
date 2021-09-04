@@ -11,7 +11,10 @@ class happeoCustomWidget extends LitElement {
   @property({ type: String })
   uniqueId = "";
 
-  @property({ type: Boolean })
+  @property({
+    type: Boolean,
+    converter: (attr: string | null) => attr?.toLowerCase() === "true",
+  })
   editMode = false;
 
   @state()

@@ -7,7 +7,10 @@ class happeoCustomWidget extends LitElement {
     return {
       widgetId: { type: String },
       uniqueId: { type: String },
-      editMode: { type: String },
+      editMode: {
+        type: Boolean,
+        converter: (attr) => attr?.toLowerCase() === "true",
+      },
       user: { state: true },
     };
   }

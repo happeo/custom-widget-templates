@@ -33,6 +33,15 @@ Running `npm install && npm start`. That will start the dev server and serve the
 
 Note that this will only serve the JS -file and no html is being served. So next we need to run this inside Happeo.
 
+#### Lit
+
+[Lit](https://lit.dev/) is a small (about 5KB) helper library for creating standard Web components.
+This option is quite close to vanilla JS, but is much easier to read and write since it uses a React-like syntax for component templates.
+
+Start by opening either a Lit-JavaScript or a Lit-TypeScript folder, opening the `src/index.js`-file and replace `"my-widget-slug"` with the `slug` you got from step 2.
+
+Running `npm install && npm start`. That will start the dev server and serve the bundle.js -file from localhost:8080/bundle.js.
+
 ### Running inside Happeo
 
 Now that you have your custom widget created and it is in **DEVELOPMENT** -mode, you can add it to Pages. Note that the widget is only visible to administrators when in **DEVELOPMENT** and **TESTING** -modes.

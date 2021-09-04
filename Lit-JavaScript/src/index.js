@@ -22,7 +22,7 @@ class happeoCustomWidget extends LitElement {
 
   async doInit() {
     // Init API
-    const widgetApi = await widgetSDK.api.init(this.widgetId);
+    const widgetApi = await widgetSDK.api.init(this.uniqueId);
 
     // Do stuff
     this.user = await widgetApi.getCurrentUser();

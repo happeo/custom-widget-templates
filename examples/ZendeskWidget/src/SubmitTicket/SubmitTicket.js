@@ -16,7 +16,7 @@ const SubmitTicket = ({ widgetApi }) => {
 
   const [isSubmitting, setIsSubmitting] = useState();
   const [error, setError] = useState();
-  const [toast, setShowToast] = useState();
+  const [showTicketCreated, setShowTicketCreated] = useState();
 
   const handleFieldUpdate = useCallback(
     (name, value, isDirty = true) => {
@@ -39,7 +39,7 @@ const SubmitTicket = ({ widgetApi }) => {
           comment: { body: formState.description },
         },
       });
-      setShowToast(true);
+      setShowTicketCreated(true);
       setFormState({
         subject: "",
         description: "",
@@ -52,15 +52,15 @@ const SubmitTicket = ({ widgetApi }) => {
 
   return (
     <div style={{ width: "100%", position: "relative" }}>
-      {toast && (
-        <Toast>
+      {showTicketCreated && (
+        <TicketCreated>
           <label>Ticket created successfully!</label>
           <ButtonPrimary
             style={{ marginTop: 16 }}
             text="Create another one"
-            onClick={() => setShowToast(false)}
+            onClick={() => setShowTicketCreated(false)}
           />
-        </Toast>
+        </TicketCreated>
       )}
       <Title style={{ marginBottom: "18px" }}>Submit a ticket</Title>
 
@@ -105,7 +105,7 @@ const SubmitTicket = ({ widgetApi }) => {
   );
 };
 
-const Toast = styled.div`
+const TicketCreated = styled.div`
   position: absolute;
   z-index: 1;
   background-color: #fff;

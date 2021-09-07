@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { Input, Textarea } from "@happeouikit/form-elements";
 import { ButtonPrimary } from "@happeouikit/buttons";
-import { alert } from "@happeouikit/colors";
+import { alert, success } from "@happeouikit/colors";
 
 import { submitTicket } from "../actions";
 
@@ -16,6 +16,7 @@ const SubmitTicket = ({ widgetApi }) => {
 
   const [isSubmitting, setIsSubmitting] = useState();
   const [error, setError] = useState();
+  const [toast, setShowToast] = useState();
 
   const handleFieldUpdate = useCallback(
     (name, value, isDirty = true) => {
@@ -38,6 +39,11 @@ const SubmitTicket = ({ widgetApi }) => {
           comment: { body: formState.description },
         },
       });
+      setShowToast(true);
+      setFormState({
+        subject: "",
+        description: "",
+      });
     } catch (error) {
       setError(error);
     }
@@ -45,13 +51,23 @@ const SubmitTicket = ({ widgetApi }) => {
   }, [formState]);
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", position: "relative" }}>
+      {toast && (
+        <Toast>
+          <label>Ticket created successfully!</label>
+          <ButtonPrimary
+            style={{ marginTop: 16 }}
+            text="Create another one"
+            onClick={() => setShowToast(false)}
+          />
+        </Toast>
+      )}
       <Title style={{ marginBottom: "18px" }}>Submit a ticket</Title>
 
       <ul>
         <li style={{ marginBottom: "18px" }}>
           <Input
-            placeholder="Placeholder"
+            placeholder="ticket subject"
             label="Subject"
             autoComplete="off"
             required
@@ -88,6 +104,28 @@ const SubmitTicket = ({ widgetApi }) => {
     </div>
   );
 };
+
+const Toast = styled.div`
+  position: absolute;
+  z-index: 1;
+  background-color: #fff;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  label {
+    border-radius: 6px;
+    background-color: ${success};
+    color: #fff;
+    padding: 6px;
+    padding-bottom: 8px;
+    font-size: 16px;
+  }
+`;
 
 const Error = styled.div`
   color: ${alert};

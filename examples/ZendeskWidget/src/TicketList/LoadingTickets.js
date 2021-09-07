@@ -13,7 +13,7 @@ const LoadingTickets = () => {
         }}
       >
         <Skeleton width="70%" height="25px" style={{ marginBottom: "8px" }} />
-        <Skeleton width="80%" height="20px" />
+        <Skeleton width="80%" height="20px" style={{ marginBottom: "4px" }} />
         <Skeleton width="80%" height="20px" />
       </div>
       <div
@@ -25,7 +25,7 @@ const LoadingTickets = () => {
         }}
       >
         <Skeleton width="70%" height="25px" style={{ marginBottom: "8px" }} />
-        <Skeleton width="50%" height="20px" />
+        <Skeleton width="50%" height="20px" style={{ marginBottom: "4px" }} />
         <Skeleton width="50%" height="20px" />
       </div>
       <div
@@ -37,7 +37,7 @@ const LoadingTickets = () => {
         }}
       >
         <Skeleton width="70%" height="25px" style={{ marginBottom: "8px" }} />
-        <Skeleton width="60%" height="20px" />
+        <Skeleton width="60%" height="20px" style={{ marginBottom: "4px" }} />
         <Skeleton width="60%" height="20px" />
       </div>
     </div>

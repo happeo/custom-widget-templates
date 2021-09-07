@@ -72,6 +72,7 @@ const TicketList = ({ widgetApi }) => {
           {tickets.map((ticket) => {
             const { id, status, url, subject, requester, created_at } = ticket;
 
+            const zendeskUrl = `${url.split("api")[0]}agent/tickets/${id}`;
             const timestamp = new Date(created_at).toLocaleDateString(undefined, {
               day: "numeric",
               month: "short",
@@ -84,7 +85,7 @@ const TicketList = ({ widgetApi }) => {
                   <StyledLink
                     aria-label={subject}
                     role="button"
-                    onClick={() => window.open(url, "_blank").focus()}
+                    onClick={() => window.open(zendeskUrl, "_blank").focus()}
                   >
                     <LongText data-for={id} data-tip>
                       {subject}

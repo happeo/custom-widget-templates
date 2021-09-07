@@ -39,7 +39,7 @@ const StateBadge = ({ status }) => {
         {statusStyle.abbr}
       </StatusBadge>
       <ReactTooltip id={status} place="bottom">
-        {`Ticket ${statusStyle.text}`}
+        {statusStyle.text}
       </ReactTooltip>
     </div>
   );
@@ -48,8 +48,8 @@ const StateBadge = ({ status }) => {
 const StatusBadge = styled.div`
   font-size: 12px;
   font-weight: 600;
-  border-radius: 2px;
-  padding: 4px 8px;
+  border-radius: 4px;
   margin-right: 8px;
+  padding: 2px 5px 3px 5px;
 `;
 export default StateBadge;

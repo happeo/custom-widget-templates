@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-// import debounce from "lodash.debounce";
 
 import widgetSDK from "@happeo/widget-sdk";
-// import { parseStringJSON } from "./utils";
 import { WIDGET_SETTINGS } from "./constants";
 
 import { TicketList } from "./TicketList";
@@ -19,8 +17,6 @@ const ZendeskWidget = ({ id, editMode }) => {
       // Init API, use uniqueId for the initialisation as this widget may be present multiple times in a page
       const api = await widgetSDK.api.init(id);
 
-      // const widgetContent = await api.getContent();
-
       // After init, declare settings that are displayed to the user, add setSettings as the callback
       api.declareSettings(WIDGET_SETTINGS, setSettings);
       setWidgetApi(api);
@@ -34,7 +30,6 @@ const ZendeskWidget = ({ id, editMode }) => {
     return null;
   }
 
-  console.log(settings);
   return (
     <Container>
       {settings.widgetType !== "submit" && <TicketList widgetApi={widgetApi} />}

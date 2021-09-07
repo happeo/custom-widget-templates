@@ -1,9 +1,11 @@
 const path = require("path");
+const Dotenv = require("dotenv-webpack");
 
 module.exports = (env) => {
   const isProd = env.production;
 
   return {
+    plugins: [new Dotenv()],
     entry: path.join(__dirname, "src", "index.js"),
     mode: isProd ? "production" : "development",
     module: {

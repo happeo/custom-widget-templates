@@ -3,21 +3,17 @@ import ZendeskWidget from "./ZendeskWidget";
 
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
-    const widgetId = this.getAttribute("widgetId") || "";
     const uniqueId = this.getAttribute("uniqueId") || "";
-    const editMode = this.getAttribute("editMode") || "";
+    const mode = this.getAttribute("mode") || "";
+
     ReactDOM.render(
-      <ZendeskWidget
-        id={uniqueId}
-        widgetId={widgetId}
-        editMode={editMode === "true"}
-      />,
+      <ZendeskWidget id={uniqueId} editMode={mode === "edit"} />,
       this
     );
   }
 }
 
-const slug = "zendesk-poc-vn8cvdsypdpztt5el25g";
+const slug = "add-your-slug-here";
 
 window.customElements.get(slug) ||
   window.customElements.define(slug, happeoCustomReactWidget);

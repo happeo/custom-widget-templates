@@ -70,6 +70,6 @@ When the web component is rendered inside Happeo, we inject the following proper
 
 | Prop       |                                                                                           Description                                                                                            |
 | ---------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| `widgetId` |                                                                                 This is the widget's unique id.                                                                                  |
 | `uniqueId` |                                                     This is the widget **instance's** unique id. Use this to initiate the @happeo/widget-sdk                                                     |
-| `editMode` | This indicates if the widget is displayed in edit or view -mode. Consider this when developing widgets for pages, since you most likely don't want page viewers to see all the editing controls. |
+| `mode`     | This indicates if the widget is displayed in edit or view -mode. Consider this when developing widgets for pages, since you most likely don't want page viewers to see all the editing controls. |
+| `location` |                                                     This indicates where the widget is being rendered. Currently this can only page "pages".                                                     |

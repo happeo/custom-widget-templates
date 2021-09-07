@@ -3,14 +3,13 @@ import WeatherWidget from "./WeatherWidget";
 
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
-    const widgetId = this.getAttribute("widgetId") || "";
     const uniqueId = this.getAttribute("uniqueId") || "";
-    const editMode = this.getAttribute("editMode") || "";
+    const mode = this.getAttribute("mode") || "";
     ReactDOM.render(
       <WeatherWidget
         id={uniqueId}
         widgetId={widgetId}
-        editMode={editMode === "true"}
+        editMode={mode === "edit"}
       />,
       this
     );

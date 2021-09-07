@@ -3,20 +3,15 @@ import AccordionWidget from "./AccordionWidget";
 
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
-    const widgetId = this.getAttribute("widgetId") || "";
     const uniqueId = this.getAttribute("uniqueId") || "";
-    const editMode = this.getAttribute("editMode") || "";
+    const mode = this.getAttribute("mode") || "";
     ReactDOM.render(
-      <AccordionWidget
-        id={uniqueId}
-        widgetId={widgetId}
-        editMode={editMode === "true"}
-      />,
+      <AccordionWidget id={uniqueId} editMode={mode === "edit"} />,
       this,
     );
   }
 }
-const slug = "add-slug-here";
+const slug = "slug-here";
 
 window.customElements.get(slug) ||
   window.customElements.define(slug, happeoCustomReactWidget);

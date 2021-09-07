@@ -5,12 +5,8 @@ import widgetSDK from "@happeo/widget-sdk";
 class happeoCustomWidget extends LitElement {
   static get properties() {
     return {
-      widgetId: { type: String },
       uniqueId: { type: String },
-      editMode: {
-        type: Boolean,
-        converter: (attr) => attr?.toLowerCase() === "true",
-      },
+      mode: { type: String },
       user: { state: true },
     };
   }
@@ -32,7 +28,9 @@ class happeoCustomWidget extends LitElement {
   render() {
     return html`
       <div class="wrapper">
-        <h1>Happeo custom widget</h1>
+        <h1>
+          Happeo custom widget ${this.mode === "edit" ? "[edit mode]" : ""}
+        </h1>
         <p>
           ${(this.user && html`Hi, ${this.user.name.fullName}!`) ||
           html`initializing...`}

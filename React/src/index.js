@@ -3,17 +3,9 @@ import Widget from "./Widget";
 
 class happeoCustomReactWidget extends HTMLElement {
   connectedCallback() {
-    const widgetId = this.getAttribute("widgetId") || "";
     const uniqueId = this.getAttribute("uniqueId") || "";
-    const editMode = this.getAttribute("editMode") || "";
-    ReactDOM.render(
-      <Widget
-        id={uniqueId}
-        widgetId={widgetId}
-        editMode={editMode === "true"}
-      />,
-      this,
-    );
+    const mode = this.getAttribute("mode") || "";
+    ReactDOM.render(<Widget id={uniqueId} editMode={mode === "edit"} />, this);
   }
 }
 const slug = "my-widget-slug";

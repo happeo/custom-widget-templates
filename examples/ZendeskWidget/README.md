@@ -14,10 +14,15 @@ The service should then be running on localhost port 8081.
 
 #### create .env file and add following environment variables
 SHARED_SECRET=`{Your zendesk happeo widget secret}`
+
 BASE_URL=`{Your zendesk project base url ex. https://{projectName}.zendesk.com}`
+
 CLIENT_ID=`{Zendesk API oAuth client id}`
+
 CLIENT_SECRET=`{Zendesk API oAuth client secret}`
+
 OAUTH_CALLBACK_URL=`"http://localhost:8081/oauth/callback"`
+
 OAUTH_CALLBACK_AFTER_REDIRECT_URL=`"http://localhost:8081/oauth/result"`
 
 ### Deploying

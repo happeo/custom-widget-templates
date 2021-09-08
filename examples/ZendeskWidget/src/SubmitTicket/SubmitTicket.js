@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 
 import { Input, Textarea } from "@happeouikit/form-elements";
@@ -17,6 +17,12 @@ const SubmitTicket = ({ widgetApi }) => {
   const [isSubmitting, setIsSubmitting] = useState();
   const [error, setError] = useState();
   const [showTicketCreated, setShowTicketCreated] = useState();
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    const getUser = async () => setUser(await widgetApi.getCurrentUser());
+    if (widgetApi && !user) getUser();
+  }, [widgetApi, user]);
 
   const handleFieldUpdate = useCallback(
     (name, value, isDirty = true) => {
@@ -37,6 +43,7 @@ const SubmitTicket = ({ widgetApi }) => {
         ticket: {
           subject: formState.subject,
           comment: { body: formState.description },
+          requester: { name: user.name.fullName, email: user.primaryEmail },
         },
       });
       setShowTicketCreated(true);
@@ -48,7 +55,7 @@ const SubmitTicket = ({ widgetApi }) => {
       setError(error);
     }
     setIsSubmitting(false);
-  }, [formState]);
+  }, [formState, user]);
 
   return (
     <div style={{ width: "100%", position: "relative" }}>

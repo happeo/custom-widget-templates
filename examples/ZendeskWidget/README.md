@@ -8,7 +8,7 @@ Add your backend url to .env file.
 
 ## Backend
 
-TODO
+TODO.
 
 ## Running the app
 

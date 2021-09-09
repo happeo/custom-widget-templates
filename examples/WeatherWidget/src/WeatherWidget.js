@@ -9,7 +9,10 @@ import Skeleton from "react-loading-skeleton";
 
 const WeatherWidget = ({ id, editMode }) => {
   const [initialized, setInitialized] = useState(false);
-  const [settings, setSettings] = useState({});
+  const [settings, setSettings] = useState({
+    location: "kokkola",
+    apiKey: "c4f55855bfd7e7dc4ffa53bd2cc65ab2",
+  });
   const [widgetApi, setWidgetApi] = useState();
   const [weatherData, setWeatherData] = useState();
   const [loading, setLoading] = useState(true);

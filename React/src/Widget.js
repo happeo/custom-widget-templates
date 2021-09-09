@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import widgetSDK from "@happeo/widget-sdk";
 
@@ -16,8 +16,8 @@ const Widget = ({ id, editMode }) => {
       // Do stuff
       await widgetApi.getCurrentUser();
       console.log("I am all good and ready to go!");
+      setWidgetApi(widgetApi);
     };
-    doInit();
   }, [editMode, id]);
 
   return (

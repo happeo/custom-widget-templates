@@ -6,11 +6,7 @@ class happeoCustomReactWidget extends HTMLElement {
     const uniqueId = this.getAttribute("uniqueId") || "";
     const mode = this.getAttribute("mode") || "";
     ReactDOM.render(
-      <WeatherWidget
-        id={uniqueId}
-        widgetId={widgetId}
-        editMode={mode === "edit"}
-      />,
+      <WeatherWidget id={uniqueId} editMode={mode === "edit"} />,
       this
     );
   }

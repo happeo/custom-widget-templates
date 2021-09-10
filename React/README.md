@@ -14,6 +14,6 @@ The app runs in localhost:8080 and is designed to be developed inside Happeo.
 
 `npm start` - This will start the webserver and serve the js file from localhost:8080/bundle.js
 
-## Run the app in mocked localhost environment
+## Run the app in localhost environment
 
-`npm dev` - This will start the webserver and serve the index.html file from localhost:8080. WidgetSdk services are mocked.
+`npm dev` - This will start the webserver and serve the index.html file from localhost:8080. Widget-sdk services are mocked.

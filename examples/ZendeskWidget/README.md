@@ -7,8 +7,28 @@ Zendesk integration widget. Implements basic list tickes and submit ticket featu
 Add your backend url to .env file.
 
 ## Backend
+To run backend service 
+`cd server && npm install`
+`npm start`
+The service should then be running on localhost port 8081.
 
-TODO
+#### create .env file and add following environment variables
+SHARED_SECRET=`{Your zendesk happeo widget secret}`
+
+BASE_URL=`{Your zendesk project base url ex. https://{projectName}.zendesk.com}`
+
+CLIENT_ID=`{Zendesk API oAuth client id}`
+
+CLIENT_SECRET=`{Zendesk API oAuth client secret}`
+
+OAUTH_CALLBACK_URL=`"http://localhost:8081/oauth/callback"`
+
+OAUTH_CALLBACK_AFTER_REDIRECT_URL=`"http://localhost:8081/oauth/result"`
+
+### Deploying
+
+The app is designed to run in CloudRun. To deploy this to CloudRun you should be familiar with that. To deploy a new version of this to the container registry, you can run `npm run deploy`. But before doing that, check the `package.json` script `deploy` and fill in your GCP project and CloudRun app name. Remember to add secrets and environment variables to your cloud run instance.
+
 
 ## Running the app
 

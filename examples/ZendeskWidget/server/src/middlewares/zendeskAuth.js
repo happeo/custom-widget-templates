@@ -1,5 +1,5 @@
 const { getToken } = require("../store");
-const checkAuth = (req, res, next) => {
+const verifyZendeskAuth = (req, res, next) => {
   try {
     const { user } = res.locals;
     const accessTokenData = getToken(user.organisationId);
@@ -16,4 +16,4 @@ const checkAuth = (req, res, next) => {
   }
 };
 
-module.exports = { checkAuth };
+module.exports = { verifyZendeskAuth };

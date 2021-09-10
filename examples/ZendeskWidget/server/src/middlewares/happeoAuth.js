@@ -1,6 +1,6 @@
 const { verifySharedToken } = require("../services/jwt");
 
-const verifyJwt = (req, res, next) => {
+const verifyHappeoAuth = (req, res, next) => {
   try {
     const token = req.headers.authorization.split("Bearer ")[1];
     const verifiedToken = verifySharedToken(token);
@@ -16,4 +16,4 @@ const verifyJwt = (req, res, next) => {
   }
 };
 
-module.exports = { verifyJwt };
+module.exports = { verifyHappeoAuth };

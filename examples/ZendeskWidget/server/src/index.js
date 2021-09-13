@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
-  }),
+  })
 );
 
 app.get("/oauth/begin", asyncwrapper(oauthBegin));
@@ -25,7 +25,12 @@ app.get("/oauth/callback", asyncwrapper(oauthCallback));
 
 app.get("/tickets", verifyHappeoAuth, verifyZendeskAuth, asyncwrapper(getTickets));
 
-app.post("/tickets", verifyHappeoAuth, verifyZendeskAuth, asyncwrapper(createTicket));
+app.post(
+  "/tickets",
+  verifyHappeoAuth,
+  verifyZendeskAuth,
+  asyncwrapper(createTicket)
+);
 
 app.use(function (req, res, next) {
   res.set("Cache-control", "no-cache");
@@ -34,6 +39,10 @@ app.use(function (req, res, next) {
 
 // Serve any static files
 app.use("/public", express.static(path.join(__dirname, "public")));
+
+app.use((err, _req, res, _next) => {
+  res.status(err.status || 500).send(err.message);
+});
 
 app.get("/oauth/result", function (req, res) {
   const { success } = req.query;

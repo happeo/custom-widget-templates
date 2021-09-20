@@ -1,0 +1,35 @@
+head
+  meta(name="referrer" content="no-referrer")
+  meta(charset="utf-8")
+  meta(name="viewport" content="width=device-width, initial-scale=1, user-scalable=no")
+  title Success - Select project
+  style
+    include ./style.css
+  body
+    div(class="container")
+      if projectId
+        h1 🎉 Ready to rock 🎉
+        p Happeo Jira integration is now ready to use!
+        p You can now close this window.
+      else
+        h1 Almost done, next choose project below
+        p You can only use one default project at a time. 
+      ul 
+        each item in accessibleResources
+          li(class=item.selected && "selected") 
+            a(href=item.selectUrl)
+              img(src=item.avatarUrl)
+              h2= item.name
+  if !projectId
+    script. 
+      window.onbeforeunload = (e) => {
+        const question = "You haven't selected a project yet, are you sure you want to cancel?"
+        e = e || window.event;
+        // For IE and Firefox prior to version 4
+        if (e) {
+            e.returnValue = question;
+        }
+        // For Safari
+        return question;
+      };
+

@@ -1,4 +1,5 @@
 import { Locals } from "models/auth";
+import { AuthToken } from "models/token";
 import { User } from "models/user";
 
 const { encryptToken, decryptToken } = require("./encryption");
@@ -8,7 +9,7 @@ import { getAuthFromCache, setAuthToCache } from "./memoryCache";
 const storeToken = async (
   user: User,
   origin: string,
-  token: string,
+  token: AuthToken,
   initialSave: boolean,
 ) => {
   const encryptedToken = await encryptToken(user, token);

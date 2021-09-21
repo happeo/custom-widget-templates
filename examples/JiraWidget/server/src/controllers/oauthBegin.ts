@@ -10,7 +10,7 @@ import { createStateToken } from "../services/firestore";
 import { verifySharedToken, createInternalToken } from "../services/jwt";
 
 /**
- * Callback of Zendesk OAuth process. Drawbridge does not authenticate the user because of custom domains.
+ * Callback of Jira OAuth process. Drawbridge does not authenticate the user because of custom domains.
  * So we use JWT token from query parameters instead for authentication
  *
  * @param {*} req

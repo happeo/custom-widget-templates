@@ -6,7 +6,7 @@ import { storeToken } from "../services/store";
 import { getStateTokenById } from "../services/firestore";
 
 /**
- * Callback of Zendesk OAuth process.
+ * Callback of Jira OAuth process.
  *
  * @param {*} req
  * @param {*} res

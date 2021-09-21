@@ -6,7 +6,7 @@ import { getToken } from "../services/store";
 import { saveProject } from "../services/firestore";
 
 /**
- * Callback of Zendesk OAuth process.
+ * Callback of Jira OAuth process.
  *
  * @param {*} req
  * @param {*} res
@@ -33,20 +33,20 @@ export default async function oauthCallback(req: Request, res: Response) {
       throw new Unauthorized();
     }
 
-    if (resources.code) {
+    if (resources.code !== 200) {
       throw new InternalServerError();
     }
 
-    const accessibleResources = resources.map((item: any) => ({
+    const accessibleResources = resources.data.map((item: any) => ({
       ...item,
       selectUrl: `/project-selector?projectId=${item.id}&baseUrl=${item.url}&origin=${origin}&token=${token}`,
-      selected: item.id === projectId || resources.length === 1,
+      selected: item.id === projectId || resources.data.length === 1,
     }));
 
-    const onlyOneProject = resources.length === 1;
+    const onlyOneProject = resources.data.length === 1;
 
     if (onlyOneProject) {
-      const singleProject = resources[0];
+      const singleProject = resources.data[0];
       await saveProject(
         user,
         origin as string,
@@ -56,7 +56,7 @@ export default async function oauthCallback(req: Request, res: Response) {
     }
 
     res.status(200).render("project-selector", {
-      projectId: projectId || (onlyOneProject && resources[0].id),
+      projectId: projectId || (onlyOneProject && resources.data[0].id),
       accessibleResources,
     });
   } catch (err) {

@@ -1,5 +1,7 @@
 import { Locals } from "models/auth";
-
+import { JiraAccessibleResource } from "models/external/jiraAccessibleResource";
+import { JiraSuggestionIssueResponse } from "models/external/jiraSuggestionResponse";
+import { AuthToken } from "models/token";
 const { Unauthorized, BadRequest } = require("http-errors");
 const fetch = require("node-fetch");
 const {
@@ -18,7 +20,12 @@ let secrets = {
   client_secret: null,
 };
 
-const exchangeCodeToToken = (code: string) => {
+interface JiraResponse<T> {
+  code: number;
+  data: T;
+}
+
+const exchangeCodeToToken = (code: string): Promise<AuthToken> => {
   const body = {
     code,
     grant_type: "authorization_code",
@@ -44,7 +51,6 @@ const exchangeCodeToToken = (code: string) => {
     });
 };
 
-// type AuthToken
 const getNewToken = async (locals: Locals) => {
   const body = {
     grant_type: "refresh_token",
@@ -70,7 +76,6 @@ const getNewToken = async (locals: Locals) => {
     });
 };
 
-// user and auth with token
 const useRefreshToken = async (locals: Locals) => {
   console.log(`[Atlassian] Clearing tokeng from local cache ${locals.user.id}`);
   clearAuthFromCache(locals.user, locals.origin);
@@ -103,9 +108,10 @@ const useRefreshToken = async (locals: Locals) => {
   }
 };
 
-const getAccessibleResources = async (locals: Locals): Promise<any> => {
+const getAccessibleResources = async (
+  locals: Locals,
+): Promise<JiraResponse<JiraAccessibleResource[]>> => {
   const { auth } = locals;
-  // console.log("getAccessible", locals);
 
   const url = new URL(`${BASE_URL}/oauth/token/accessible-resources`);
   const options = {
@@ -117,14 +123,15 @@ const getAccessibleResources = async (locals: Locals): Promise<any> => {
   };
 
   const response = await fetch(url, options);
-  const result = await response.json();
+  const { status } = response;
+  const result: JiraAccessibleResource[] = await response.json();
 
-  if (result.code === 401 && auth.refresh_token) {
+  if (status === 401 && auth.refresh_token) {
     const newLocals = await useRefreshToken(locals);
     return await getAccessibleResources(newLocals);
   }
 
-  return result;
+  return { code: status, data: result };
 };
 
 const getStatuses = async (locals: Locals, params = {} as any) => {
@@ -159,8 +166,10 @@ const getStatuses = async (locals: Locals, params = {} as any) => {
   return result;
 };
 
-const searchSuggestions = async (locals: Locals, params: any) => {
-  //console.log("search", locals);
+const searchSuggestions = async (
+  locals: Locals,
+  params: any,
+): Promise<JiraResponse<{ sections: JiraSuggestionIssueResponse[] }>> => {
   const { auth, projectId = {} } = locals;
 
   if (!params.resourceId && !projectId) {
@@ -186,6 +195,7 @@ const searchSuggestions = async (locals: Locals, params: any) => {
   };
 
   const response = await fetch(url, options);
+  const { status } = response;
   const result = await response.json();
 
   if (result.code === 401 && locals.auth.refresh_token) {
@@ -193,7 +203,7 @@ const searchSuggestions = async (locals: Locals, params: any) => {
     return await searchWithJql(newLocals, params);
   }
 
-  return result;
+  return { code: status, data: result };
 };
 
 const searchWithJql = async (locals: Locals, params: any): Promise<any> => {
@@ -206,7 +216,7 @@ const searchWithJql = async (locals: Locals, params: any): Promise<any> => {
   }
 
   const url = new URL(
-    `${BASE_URL}/ex/jira/${params.resourceId || projectId}/rest/api/3/search`,
+    `${BASE_URL}/ex/jira/${params.resourceId || projectId}/rest/api/3/searchs`,
   );
 
   url.searchParams.append("jql", params.jql || "");

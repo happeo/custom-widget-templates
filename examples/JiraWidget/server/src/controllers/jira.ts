@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import { InternalServerError, Unauthorized } from "http-errors";
 import { Locals } from "models/auth";
 import { JiraIssue } from "models/external/jiraIssue";
-import { JiraSuggestionIssueResponse } from "models/external/jiraSuggestionResponse";
+import { Issue } from "models/issue";
 import {
   getAccessibleResources,
   searchWithJql,
@@ -56,15 +57,17 @@ const search = async (req: Request, res: Response, next: NextFunction) => {
 const suggestions = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { query } = req;
-    const response: { sections: JiraSuggestionIssueResponse[] } =
-      await searchSuggestions(res.locals as Locals, query);
+    const response = await searchSuggestions(res.locals as Locals, query);
+
+    if (response.code === 401) throw new Unauthorized();
+    if (response.code !== 200) throw new InternalServerError();
 
     let issueList: JiraIssue[] = [];
-    response.sections.forEach(({ issues }) => {
+    response.data.sections.forEach(({ issues }) => {
       issueList = [...issueList, ...issues];
     });
 
-    const formattedList = issueList.map((issue) => ({
+    const formattedList: Issue[] = issueList.map((issue) => ({
       id: issue.id,
       url: `${res.locals.projectBaseUrl}/browse/${issue.key}`,
       text: issue.summaryText,
@@ -75,7 +78,7 @@ const suggestions = async (req: Request, res: Response, next: NextFunction) => {
 
     res.send({
       items: formattedList,
-      _raw: response,
+      _raw: response.data,
       _project: {
         projectId: res.locals.projectId,
         projectBaseUrl: res.locals.projectBaseUrl,

@@ -216,7 +216,7 @@ const searchWithJql = async (locals: Locals, params: any): Promise<any> => {
   }
 
   const url = new URL(
-    `${BASE_URL}/ex/jira/${params.resourceId || projectId}/rest/api/3/searchs`,
+    `${BASE_URL}/ex/jira/${params.resourceId || projectId}/rest/api/3/search`,
   );
 
   url.searchParams.append("jql", params.jql || "");

@@ -66,14 +66,14 @@ const IssueList = ({ widgetApi, settings, query, setUnauthorized }) => {
         if (mounted) {
           setIssues((prevValue) => [
             ...new Map(
-              [...(pageNumber > 0 ? prevValue : []), ...result.issues].map(
+              [...(pageNumber > 0 ? prevValue : []), ...result.items].map(
                 (item) => [item.id, item],
               ),
             ).values(),
           ]);
           setRootUrl(result._project.projectBaseUrl);
           setTotal(result.total);
-          setHasMore(result.issues.length >= maxResults);
+          setHasMore(result.items.length >= maxResults);
           setLoading(false);
         }
       } catch (error) {

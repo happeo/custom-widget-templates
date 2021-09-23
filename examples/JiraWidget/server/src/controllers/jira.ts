@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { InternalServerError, Unauthorized } from "http-errors";
 import { Locals } from "models/auth";
 import { JiraIssue } from "models/external/jiraIssue";
-import { Issue } from "models/issue";
 import {
   getAccessibleResources,
   searchWithJql,
@@ -67,13 +66,13 @@ const suggestions = async (req: Request, res: Response, next: NextFunction) => {
       issueList = [...issueList, ...issues];
     });
 
-    const formattedList: Issue[] = issueList.map((issue) => ({
-      id: issue.id,
+    const formattedList = issueList.map((issue) => ({
+      id: `${issue.id}`,
       url: `${res.locals.projectBaseUrl}/browse/${issue.key}`,
-      text: issue.summaryText,
+      description: issue.summaryText,
       highlightedText: issue.summary,
       icon: `${res.locals.projectBaseUrl}${issue.img}`,
-      subtitle: issue.key,
+      value: issue.key,
     }));
 
     res.send({

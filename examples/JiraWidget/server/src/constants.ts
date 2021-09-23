@@ -1,8 +1,8 @@
 if (process.env.ENVIRONMENT !== "production") require("dotenv").config();
 
 const {
-  CLIENT_ID = "m3CTc5P2Wuy3x37uq3vtvEfihFrk963D", //"n1KOcR6G986BkCLr81dvjfT6iQ4pwFhR",
-  CLIENT_SECRET_KEY = "jira-integration-secret-henri",
+  CLIENT_ID = "B4FAc3kGMeAM0ltRQjZdDesjth5XI3NY", //"n1KOcR6G986BkCLr81dvjfT6iQ4pwFhR",
+  CLIENT_SECRET_KEY = "jira-client-secret",
   SHARED_SECRET_KEY = "happeo-shared-secret",
   KMS_LOCATION = "europe-west1",
   PROJECT_NAME = "happeo-jira-integration",

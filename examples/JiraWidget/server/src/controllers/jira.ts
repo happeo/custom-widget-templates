@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { InternalServerError, Unauthorized } from "http-errors";
 import { Locals } from "models/auth";
 import { JiraIssue } from "models/external/jiraIssue";
+import { PageInfo } from "models/pageInfo";
+import { Suggestion } from "models/unifiedResponses";
 import {
   getAccessibleResources,
   searchWithJql,
@@ -41,8 +43,16 @@ const search = async (req: Request, res: Response, next: NextFunction) => {
     const { query } = req;
 
     const response = await searchWithJql(res.locals as Locals, query);
+
+    const pageInfo: PageInfo = {
+      pageNumber: response.startAt / response.maxResults,
+      pageSize: response.maxResults,
+      total: response.total,
+    };
+
     res.send({
-      ...response,
+      ...pageInfo,
+      items: response.issues,
       _project: {
         projectId: res.locals.projectId,
         projectBaseUrl: res.locals.projectBaseUrl,
@@ -66,7 +76,7 @@ const suggestions = async (req: Request, res: Response, next: NextFunction) => {
       issueList = [...issueList, ...issues];
     });
 
-    const formattedList = issueList.map((issue) => ({
+    const formattedList: Suggestion[] = issueList.map((issue) => ({
       id: `${issue.id}`,
       url: `${res.locals.projectBaseUrl}/browse/${issue.key}`,
       description: issue.summaryText,
@@ -75,6 +85,7 @@ const suggestions = async (req: Request, res: Response, next: NextFunction) => {
       value: issue.key,
     }));
 
+    console.log(response);
     res.send({
       items: formattedList,
       _raw: response.data,

@@ -219,11 +219,13 @@ const searchWithJql = async (locals: Locals, params: any): Promise<any> => {
     `${BASE_URL}/ex/jira/${params.resourceId || projectId}/rest/api/3/search`,
   );
 
-  url.searchParams.append("jql", params.query ? `text~ ${params.query}` : "");
+  url.searchParams.append("jql", params.query ? `text~ "${params.query}"` : "");
   url.searchParams.append("maxResults", params.pageSize || 10);
   url.searchParams.append(
     "startAt",
-    `${params.pageNumber * params.pageSize}` || "0",
+    params.pageNumber && params.pageSize
+      ? `${params.pageNumber * params.pageSize}`
+      : "0",
   );
 
   const options = {

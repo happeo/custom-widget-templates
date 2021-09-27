@@ -49,7 +49,7 @@ const search = async (req: Request, res: Response, next: NextFunction) => {
       pageSize: response.maxResults,
       total: response.total,
     };
-    const jiraIssues: JiraIssue[] = response.issues;
+    const jiraIssues: JiraIssue[] = response.issues || [];
 
     const formattedResponse: UnifiedResponse[] = jiraIssues.map((issue) => {
       return {

@@ -3,7 +3,7 @@ import { InternalServerError, Unauthorized } from "http-errors";
 import { Locals } from "models/auth";
 import { JiraIssue } from "models/external/jiraIssue";
 import { PageInfo } from "models/pageInfo";
-import { Suggestion } from "models/unifiedResponses";
+import { UnifiedResponse } from "models/unifiedResponses";
 import {
   getAccessibleResources,
   searchWithJql,
@@ -49,14 +49,21 @@ const search = async (req: Request, res: Response, next: NextFunction) => {
       pageSize: response.maxResults,
       total: response.total,
     };
+    const jiraIssues: JiraIssue[] = response.issues;
+
+    const formattedResponse: UnifiedResponse[] = jiraIssues.map((issue) => {
+      return {
+        value: issue.key,
+        description: issue.fields.summary,
+        id: `${issue.id}`,
+        icon: issue.fields.issuetype?.iconUrl,
+        url: `${res.locals.projectBaseUrl}/browse/${issue.key}`,
+      };
+    });
 
     res.send({
       ...pageInfo,
-      items: response.issues,
-      _project: {
-        projectId: res.locals.projectId,
-        projectBaseUrl: res.locals.projectBaseUrl,
-      },
+      items: formattedResponse,
     });
   } catch (error) {
     next(error);
@@ -76,23 +83,16 @@ const suggestions = async (req: Request, res: Response, next: NextFunction) => {
       issueList = [...issueList, ...issues];
     });
 
-    const formattedList: Suggestion[] = issueList.map((issue) => ({
+    const formattedList: UnifiedResponse[] = issueList.map((issue) => ({
       id: `${issue.id}`,
       url: `${res.locals.projectBaseUrl}/browse/${issue.key}`,
       description: issue.summaryText,
-      highlightedText: issue.summary,
       icon: `${res.locals.projectBaseUrl}${issue.img}`,
       value: issue.key,
     }));
 
-    console.log(response);
     res.send({
       items: formattedList,
-      _raw: response.data,
-      _project: {
-        projectId: res.locals.projectId,
-        projectBaseUrl: res.locals.projectBaseUrl,
-      },
     });
   } catch (error) {
     next(error);

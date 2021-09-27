@@ -5,4 +5,10 @@ export interface JiraIssue {
   img: string;
   summary: string;
   summaryText: string;
+  fields: {
+    summary: string;
+    issuetype: {
+      iconUrl: string;
+    };
+  };
 }

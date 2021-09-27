@@ -1,4 +1,4 @@
-export interface Suggestion {
+export interface UnifiedResponse {
   id: string;
   value: string;
   description: string;

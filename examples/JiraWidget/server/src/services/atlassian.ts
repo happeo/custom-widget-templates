@@ -99,7 +99,7 @@ const useRefreshToken = async (locals: Locals) => {
       auth: token,
       refreshed: true,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Unable to refresh token: ${error.message}`);
     if (error.message === "invalid_grant") {
       throw new Unauthorized(error.message);
@@ -206,6 +206,50 @@ const searchSuggestions = async (
   return { code: status, data: result };
 };
 
+interface SearchInput {
+  query: string;
+  issueType: string | string[];
+  issueStatus?: string | [];
+  issueAssignee?: string | [];
+  issueCreator?: string | [];
+  pageSize?: string;
+  pageNumber?: string;
+}
+
+const buildJqlQueryCondition = (field: string, value: string | string[]) => {
+  return Array.isArray(value)
+    ? `${field} IN (${value.map((t) => `"${t}"`).join(",")})`
+    : `${field}= "${value}"`;
+};
+
+const createJqlQuery = (params: SearchInput) => {
+  let jql = "";
+
+  if (params.query) jql += `text~ "${params.query.trim()}*"`;
+
+  if (params.issueType) {
+    if (jql.length > 0) jql += " AND ";
+    jql += buildJqlQueryCondition("issueType", params.issueType);
+  }
+
+  if (params.issueStatus) {
+    if (jql.length > 0) jql += " AND ";
+    jql += buildJqlQueryCondition("status", params.issueStatus);
+  }
+
+  if (params.issueAssignee) {
+    if (jql.length > 0) jql += " AND ";
+    jql += buildJqlQueryCondition("assignee", params.issueAssignee);
+  }
+
+  if (params.issueCreator) {
+    if (jql.length > 0) jql += " AND ";
+    jql += buildJqlQueryCondition("creator", params.issueCreator);
+  }
+
+  return jql;
+};
+
 const searchWithJql = async (locals: Locals, params: any): Promise<any> => {
   const { auth, projectId } = locals;
 
@@ -219,7 +263,7 @@ const searchWithJql = async (locals: Locals, params: any): Promise<any> => {
     `${BASE_URL}/ex/jira/${params.resourceId || projectId}/rest/api/3/search`,
   );
 
-  url.searchParams.append("jql", params.query ? `text~ "${params.query}"` : "");
+  url.searchParams.append("jql", createJqlQuery(params));
   url.searchParams.append("maxResults", params.pageSize || 10);
   url.searchParams.append(
     "startAt",

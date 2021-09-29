@@ -28,7 +28,7 @@ async function getKeyRing() {
     });
 
     return keyRing;
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 5) {
       // Not found > create new key ring
       return null;
@@ -75,7 +75,7 @@ async function getCryptoKey(cryptoKeyId: string) {
       name,
     });
     return key;
-  } catch (error) {
+  } catch (error: any) {
     if ([5, 9].includes(error.code)) {
       // Not found > create new key ring
       return null;

@@ -9,6 +9,13 @@ export interface JiraIssue {
     summary: string;
     issuetype: {
       iconUrl: string;
+      name: string;
+    };
+    status: {
+      name: string;
+    };
+    assignee?: {
+      displayname: string;
     };
   };
 }

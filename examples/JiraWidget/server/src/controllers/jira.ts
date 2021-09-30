@@ -9,97 +9,36 @@ import {
   searchWithJql,
   searchSuggestions,
   getStatuses,
+  getIssueTypes,
 } from "../services/atlassian";
 
-const createFilterOptionsByFieldName = (
-  issues: JiraIssue[],
-  fieldName: string,
-  property: string,
+const createIssueTypeFilters = (
+  data: { name: string; scope: Object; id: string }[],
 ) => {
-  const options = issues.reduce((obj, issue) => {
-    const value = issue.fields[fieldName] && issue.fields[fieldName][property];
-    if (value) {
-      if (!obj[value]) {
-        obj[value] = {
-          key: issue.id,
-          value,
-          docCount: 1,
-        };
-      } else {
-        obj[value].docCount += 1;
-      }
-    }
-
-    return obj;
-  }, {});
-
-  return Object.values(options);
-};
-
-const createIssueTypeFilters = (issues: JiraIssue[]) => {
-  const options = createFilterOptionsByFieldName(issues, "issuetype", "name");
-
   const issueTypeFilter = {
     key: "issueType",
     label: "Issue Type",
     type: "checkbox",
-    options,
+    options: data
+      .filter((issue) => issue.scope !== undefined)
+      .map((issue) => {
+        return { key: issue.id, name: issue.name };
+      }),
   };
 
   return issueTypeFilter;
 };
 
-const createIssueStatusFilters = (issues: JiraIssue[]) => {
-  const options = createFilterOptionsByFieldName(issues, "status", "name");
-
+const createIssueStatusFilters = (data: { name: string; id: string }[]) => {
   const issueStatusFilter = {
     key: "issueStatus",
     label: "Issue Status",
     type: "checkbox",
-    options,
+    options: data.map((status) => {
+      return { key: status.id, name: status.name };
+    }),
   };
   return issueStatusFilter;
-};
-
-const createIssueAssigneeFilters = (issues: JiraIssue[]) => {
-  const options = createFilterOptionsByFieldName(
-    issues,
-    "assignee",
-    "displayName",
-  );
-
-  const issueStatusFilter = {
-    key: "issueAssignee",
-    label: "Issue Assignee",
-    type: "checkbox",
-    options,
-  };
-  return issueStatusFilter;
-};
-
-const createIssueCreatorFilters = (issues: JiraIssue[]) => {
-  const options = createFilterOptionsByFieldName(
-    issues,
-    "creator",
-    "displayName",
-  );
-
-  const issueStatusFilter = {
-    key: "issueCreator",
-    label: "Issue Creator",
-    type: "checkbox",
-    options,
-  };
-  return issueStatusFilter;
-};
-
-const createAvailableFilters = (issues: JiraIssue[]) => {
-  return [
-    createIssueTypeFilters(issues),
-    createIssueStatusFilters(issues),
-    createIssueAssigneeFilters(issues),
-    createIssueCreatorFilters(issues),
-  ];
 };
 
 const getIssueStatuses = async (
@@ -109,7 +48,7 @@ const getIssueStatuses = async (
 ) => {
   try {
     const { query } = req;
-    const items = await getStatuses(res.locals.auth, query);
+    const items = await getStatuses(res.locals as Locals, query);
     res.send({ items });
   } catch (error) {
     next(error);
@@ -133,7 +72,11 @@ const search = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { query } = req;
 
-    const response = await searchWithJql(res.locals as Locals, query);
+    const [response, items, issueTypes] = await Promise.all([
+      searchWithJql(res.locals as Locals, query),
+      getStatuses(res.locals as Locals, query),
+      getIssueTypes(res.locals as Locals, query),
+    ]);
 
     const pageInfo: PageInfo = {
       pageNumber: response.startAt / response.maxResults,
@@ -142,7 +85,6 @@ const search = async (req: Request, res: Response, next: NextFunction) => {
     };
 
     const jiraIssues: JiraIssue[] = response.issues || [];
-    const filters = createAvailableFilters(response.issues);
 
     const formattedResponse: UnifiedResponse[] = jiraIssues.map((issue) => {
       return {
@@ -157,7 +99,10 @@ const search = async (req: Request, res: Response, next: NextFunction) => {
     res.send({
       ...pageInfo,
       items: formattedResponse,
-      filters,
+      filters: [
+        createIssueStatusFilters(items),
+        createIssueTypeFilters(issueTypes),
+      ],
     });
   } catch (error) {
     next(error);

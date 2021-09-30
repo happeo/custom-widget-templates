@@ -160,7 +160,39 @@ const getStatuses = async (locals: Locals, params = {} as any) => {
 
   if (result.code === 401 && locals.auth.refresh_token) {
     const newLocals = await useRefreshToken(locals);
-    return await searchWithJql(newLocals, params);
+    return await getStatuses(newLocals, params);
+  }
+
+  return result;
+};
+
+const getIssueTypes = async (locals: Locals, params = {} as any) => {
+  if (!params.resourceId && !locals.projectId) {
+    throw new BadRequest(
+      "missing_parameter: 'resourceId' or prop.projectId not set",
+    );
+  }
+
+  const url = new URL(
+    `${BASE_URL}/ex/jira/${
+      params.resourceId || locals.projectId
+    }/rest/api/3/issuetype`,
+  );
+
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${locals.auth.access_token}`,
+      Accept: "application/json",
+    },
+  };
+
+  const response = await fetch(url, options);
+  const result = await response.json();
+
+  if (result.code === 401 && locals.auth.refresh_token) {
+    const newLocals = await useRefreshToken(locals);
+    return await getIssueTypes(newLocals, params);
   }
 
   return result;
@@ -237,16 +269,6 @@ const createJqlQuery = (params: SearchInput) => {
     jql += buildJqlQueryCondition("status", params.issueStatus);
   }
 
-  if (params.issueAssignee) {
-    if (jql.length > 0) jql += " AND ";
-    jql += buildJqlQueryCondition("assignee", params.issueAssignee);
-  }
-
-  if (params.issueCreator) {
-    if (jql.length > 0) jql += " AND ";
-    jql += buildJqlQueryCondition("creator", params.issueCreator);
-  }
-
   return jql;
 };
 
@@ -271,6 +293,7 @@ const searchWithJql = async (locals: Locals, params: any): Promise<any> => {
       ? `${params.pageNumber * params.pageSize}`
       : "0",
   );
+  url.searchParams.append("fields", "summary,issuetype");
 
   const options = {
     method: "GET",
@@ -308,4 +331,5 @@ export {
   searchWithJql,
   searchSuggestions,
   getStatuses,
+  getIssueTypes,
 };

@@ -10,6 +10,8 @@ import {
   searchSuggestions,
   getStatuses,
   getIssueTypes,
+  getLabels,
+  getPriorities,
 } from "../services/atlassian";
 
 const createIssueTypeFilters = (
@@ -39,6 +41,30 @@ const createIssueStatusFilters = (data: { name: string; id: string }[]) => {
     }),
   };
   return issueStatusFilter;
+};
+
+const createIssueLabelFilters = (data: { values: string[] }) => {
+  const issueLabelFilter = {
+    key: "issueLabel",
+    label: "Issue Label",
+    type: "checkbox",
+    options: data.values.map((label, i) => {
+      return { key: `${i}`, name: label };
+    }),
+  };
+  return issueLabelFilter;
+};
+
+const createIssuePriorities = (data: { name: string; id: string }[]) => {
+  const issueLabelFilter = {
+    key: "issuePriority",
+    label: "Issue Priority",
+    type: "checkbox",
+    options: data.map((priority) => {
+      return { key: priority.id, name: priority.name };
+    }),
+  };
+  return issueLabelFilter;
 };
 
 const getIssueStatuses = async (
@@ -72,11 +98,15 @@ const search = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { query } = req;
 
-    const [response, items, issueTypes] = await Promise.all([
-      searchWithJql(res.locals as Locals, query),
-      getStatuses(res.locals as Locals, query),
-      getIssueTypes(res.locals as Locals, query),
-    ]);
+    const [response, items, issueTypes, labels, priorities] = await Promise.all(
+      [
+        searchWithJql(res.locals as Locals, query),
+        getStatuses(res.locals as Locals, query),
+        getIssueTypes(res.locals as Locals, query),
+        getLabels(res.locals as Locals, query),
+        getPriorities(res.locals as Locals, query),
+      ],
+    );
 
     const pageInfo: PageInfo = {
       pageNumber: response.startAt / response.maxResults,
@@ -102,6 +132,8 @@ const search = async (req: Request, res: Response, next: NextFunction) => {
       filters: [
         createIssueStatusFilters(items),
         createIssueTypeFilters(issueTypes),
+        createIssueLabelFilters(labels),
+        createIssuePriorities(priorities),
       ],
     });
   } catch (error) {

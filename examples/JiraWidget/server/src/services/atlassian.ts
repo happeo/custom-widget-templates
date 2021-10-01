@@ -166,6 +166,70 @@ const getStatuses = async (locals: Locals, params = {} as any) => {
   return result;
 };
 
+const getLabels = async (locals: Locals, params = {} as any) => {
+  if (!params.resourceId && !locals.projectId) {
+    throw new BadRequest(
+      "missing_parameter: 'resourceId' or prop.projectId not set",
+    );
+  }
+
+  const url = new URL(
+    `${BASE_URL}/ex/jira/${
+      params.resourceId || locals.projectId
+    }/rest/api/3/label?maxResults=10000`,
+  );
+
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${locals.auth.access_token}`,
+      Accept: "application/json",
+    },
+  };
+
+  const response = await fetch(url, options);
+  const result = await response.json();
+
+  if (result.code === 401 && locals.auth.refresh_token) {
+    const newLocals = await useRefreshToken(locals);
+    return await getLabels(newLocals, params);
+  }
+
+  return result;
+};
+
+const getPriorities = async (locals: Locals, params = {} as any) => {
+  if (!params.resourceId && !locals.projectId) {
+    throw new BadRequest(
+      "missing_parameter: 'resourceId' or prop.projectId not set",
+    );
+  }
+
+  const url = new URL(
+    `${BASE_URL}/ex/jira/${
+      params.resourceId || locals.projectId
+    }/rest/api/3/priority`,
+  );
+
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${locals.auth.access_token}`,
+      Accept: "application/json",
+    },
+  };
+
+  const response = await fetch(url, options);
+  const result = await response.json();
+
+  if (result.code === 401 && locals.auth.refresh_token) {
+    const newLocals = await useRefreshToken(locals);
+    return await getPriorities(newLocals, params);
+  }
+
+  return result;
+};
+
 const getIssueTypes = async (locals: Locals, params = {} as any) => {
   if (!params.resourceId && !locals.projectId) {
     throw new BadRequest(
@@ -244,6 +308,8 @@ interface SearchInput {
   issueStatus?: string | [];
   issueAssignee?: string | [];
   issueCreator?: string | [];
+  issuePriority?: string | [];
+  issueLabel?: string | [];
   pageSize?: string;
   pageNumber?: string;
 }
@@ -269,6 +335,15 @@ const createJqlQuery = (params: SearchInput) => {
     jql += buildJqlQueryCondition("status", params.issueStatus);
   }
 
+  if (params.issueLabel) {
+    if (jql.length > 0) jql += " AND ";
+    jql += buildJqlQueryCondition("labels", params.issueLabel);
+  }
+
+  if (params.issuePriority) {
+    if (jql.length > 0) jql += " AND ";
+    jql += buildJqlQueryCondition("priority", params.issuePriority);
+  }
   return jql;
 };
 
@@ -332,4 +407,6 @@ export {
   searchSuggestions,
   getStatuses,
   getIssueTypes,
+  getLabels,
+  getPriorities,
 };

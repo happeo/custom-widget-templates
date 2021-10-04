@@ -2,6 +2,10 @@ import { Locals } from "models/auth";
 import { JiraAccessibleResource } from "models/external/jiraAccessibleResource";
 import { JiraSuggestionIssueResponse } from "models/external/jiraSuggestionResponse";
 import { AuthToken } from "models/token";
+import {
+  getProjectFiltersFromCache,
+  saveProjectFiltersToCache,
+} from "./memoryCache";
 const { Unauthorized, BadRequest } = require("http-errors");
 const fetch = require("node-fetch");
 const {
@@ -141,6 +145,9 @@ const getStatuses = async (locals: Locals, params = {} as any) => {
     );
   }
 
+  const cache = getProjectFiltersFromCache(locals.projectId, "statuses");
+  if (cache) return cache;
+
   const url = new URL(
     `${BASE_URL}/ex/jira/${
       params.resourceId || locals.projectId
@@ -163,6 +170,12 @@ const getStatuses = async (locals: Locals, params = {} as any) => {
     return await getStatuses(newLocals, params);
   }
 
+  saveProjectFiltersToCache({
+    projectId: locals.projectId,
+    key: "statuses",
+    data: result,
+  });
+
   return result;
 };
 
@@ -172,6 +185,9 @@ const getLabels = async (locals: Locals, params = {} as any) => {
       "missing_parameter: 'resourceId' or prop.projectId not set",
     );
   }
+
+  const cache = getProjectFiltersFromCache(locals.projectId, "labels");
+  if (cache) return cache;
 
   const url = new URL(
     `${BASE_URL}/ex/jira/${
@@ -195,6 +211,12 @@ const getLabels = async (locals: Locals, params = {} as any) => {
     return await getLabels(newLocals, params);
   }
 
+  saveProjectFiltersToCache({
+    projectId: locals.projectId,
+    key: "labels",
+    data: result,
+  });
+
   return result;
 };
 
@@ -204,6 +226,9 @@ const getPriorities = async (locals: Locals, params = {} as any) => {
       "missing_parameter: 'resourceId' or prop.projectId not set",
     );
   }
+
+  const cache = getProjectFiltersFromCache(locals.projectId, "priorities");
+  if (cache) return cache;
 
   const url = new URL(
     `${BASE_URL}/ex/jira/${
@@ -227,6 +252,12 @@ const getPriorities = async (locals: Locals, params = {} as any) => {
     return await getPriorities(newLocals, params);
   }
 
+  saveProjectFiltersToCache({
+    projectId: locals.projectId,
+    key: "priorities",
+    data: result,
+  });
+
   return result;
 };
 
@@ -236,6 +267,9 @@ const getIssueTypes = async (locals: Locals, params = {} as any) => {
       "missing_parameter: 'resourceId' or prop.projectId not set",
     );
   }
+
+  const cache = getProjectFiltersFromCache(locals.projectId, "issueTypes");
+  if (cache) return cache;
 
   const url = new URL(
     `${BASE_URL}/ex/jira/${
@@ -258,6 +292,12 @@ const getIssueTypes = async (locals: Locals, params = {} as any) => {
     const newLocals = await useRefreshToken(locals);
     return await getIssueTypes(newLocals, params);
   }
+
+  saveProjectFiltersToCache({
+    projectId: locals.projectId,
+    key: "issueTypes",
+    data: result,
+  });
 
   return result;
 };

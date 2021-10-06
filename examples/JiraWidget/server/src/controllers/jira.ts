@@ -21,11 +21,9 @@ const createIssueTypeFilters = (
     key: "issueType",
     label: "Issue Type",
     type: "checkbox",
-    options: data
-      .filter((issue) => issue.scope !== undefined)
-      .map((issue) => {
-        return { key: issue.id, name: issue.name };
-      }),
+    options: data.map((issue) => {
+      return { key: issue.id, name: issue.name };
+    }),
   };
 
   return issueTypeFilter;
@@ -97,16 +95,13 @@ const accessibleResources = async (
 const search = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { query } = req;
-
-    const [response, items, issueTypes, labels, priorities] = await Promise.all(
-      [
-        searchWithJql(res.locals as Locals, query),
-        getStatuses(res.locals as Locals, query),
-        getIssueTypes(res.locals as Locals, query),
-        getLabels(res.locals as Locals, query),
-        getPriorities(res.locals as Locals, query),
-      ],
-    );
+    const response = await searchWithJql(res.locals as Locals, query);
+    const [items, issueTypes, labels, priorities] = await Promise.all([
+      getStatuses(res.locals as Locals, query),
+      getIssueTypes(res.locals as Locals, query),
+      getLabels(res.locals as Locals, query),
+      getPriorities(res.locals as Locals, query),
+    ]);
 
     const pageInfo: PageInfo = {
       pageNumber: response.startAt / response.maxResults,

@@ -104,11 +104,7 @@ const useRefreshToken = async (locals: Locals) => {
       refreshed: true,
     };
   } catch (error: any) {
-    console.error(`Unable to refresh token: ${error.message}`);
-    if (error.message === "invalid_grant") {
-      throw new Unauthorized(error.message);
-    }
-    throw error;
+    throw new Unauthorized(error.message);
   }
 };
 

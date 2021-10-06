@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { InternalServerError, Unauthorized } from "http-errors";
 import { Locals } from "models/auth";
 import { JiraIssue } from "models/external/jiraIssue";
 import { PageInfo } from "models/pageInfo";
@@ -141,11 +140,8 @@ const suggestions = async (req: Request, res: Response, next: NextFunction) => {
     const { query } = req;
     const response = await searchSuggestions(res.locals as Locals, query);
 
-    if (response.code === 401) throw new Unauthorized();
-    if (response.code !== 200) throw new InternalServerError();
-
     let issueList: JiraIssue[] = [];
-    response.data.sections.forEach(({ issues }) => {
+    response.sections.forEach(({ issues }) => {
       issueList = [...issueList, ...issues];
     });
 

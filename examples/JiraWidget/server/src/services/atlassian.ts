@@ -6,7 +6,12 @@ import {
   getProjectFiltersFromCache,
   saveProjectFiltersToCache,
 } from "./memoryCache";
-const { Unauthorized, BadRequest } = require("http-errors");
+const {
+  Unauthorized,
+  BadRequest,
+  TooManyRequests,
+  InternalServerError,
+} = require("http-errors");
 const fetch = require("node-fetch");
 const {
   OAUTH_CALLBACK_URL,
@@ -28,6 +33,18 @@ interface JiraResponse<T> {
   code: number;
   data: T;
 }
+
+const handleJiraErrors = (code: number) => {
+  switch (code) {
+    case 401:
+      throw new Unauthorized();
+    case 429:
+      throw new TooManyRequests();
+
+    default:
+      throw new InternalServerError();
+  }
+};
 
 const exchangeCodeToToken = (code: string): Promise<AuthToken> => {
   const body = {
@@ -166,6 +183,8 @@ const getStatuses = async (locals: Locals, params = {} as any) => {
     return await getStatuses(newLocals, params);
   }
 
+  if (response.status !== 200) handleJiraErrors(response.status);
+
   saveProjectFiltersToCache({
     projectId: locals.projectId,
     key: "statuses",
@@ -206,6 +225,8 @@ const getLabels = async (locals: Locals, params = {} as any) => {
     const newLocals = await useRefreshToken(locals);
     return await getLabels(newLocals, params);
   }
+
+  if (response.status !== 200) handleJiraErrors(response.status);
 
   saveProjectFiltersToCache({
     projectId: locals.projectId,
@@ -248,6 +269,8 @@ const getPriorities = async (locals: Locals, params = {} as any) => {
     return await getPriorities(newLocals, params);
   }
 
+  if (response.status !== 200) handleJiraErrors(response.status);
+
   saveProjectFiltersToCache({
     projectId: locals.projectId,
     key: "priorities",
@@ -289,6 +312,8 @@ const getIssueTypes = async (locals: Locals, params = {} as any) => {
     return await getIssueTypes(newLocals, params);
   }
 
+  if (response.status !== 200) handleJiraErrors(response.status);
+
   saveProjectFiltersToCache({
     projectId: locals.projectId,
     key: "issueTypes",
@@ -301,7 +326,7 @@ const getIssueTypes = async (locals: Locals, params = {} as any) => {
 const searchSuggestions = async (
   locals: Locals,
   params: any,
-): Promise<JiraResponse<{ sections: JiraSuggestionIssueResponse[] }>> => {
+): Promise<{ sections: JiraSuggestionIssueResponse[] }> => {
   const { auth, projectId = {} } = locals;
 
   if (!params.resourceId && !projectId) {
@@ -332,10 +357,12 @@ const searchSuggestions = async (
 
   if (result.code === 401 && locals.auth.refresh_token) {
     const newLocals = await useRefreshToken(locals);
-    return await searchWithJql(newLocals, params);
+    return await searchSuggestions(newLocals, params);
   }
 
-  return { code: status, data: result };
+  if (response.status !== 200) handleJiraErrors(response.status);
+
+  return result;
 };
 
 interface SearchInput {
@@ -421,6 +448,8 @@ const searchWithJql = async (locals: Locals, params: any): Promise<any> => {
     const newLocals = await useRefreshToken(locals);
     return await searchWithJql(newLocals, params);
   }
+
+  if (response.status !== 200) handleJiraErrors(response.status);
 
   return result;
 };

@@ -8,8 +8,16 @@ const { verifyZendeskAuth } = require("./middlewares/zendeskAuth");
 const oauthCallback = require("./controllers/oauthCallback");
 const { getTickets, createTicket } = require("./controllers/tickets");
 const { verifyHappeoAuth } = require("./middlewares/happeoAuth");
+var rateLimit = require('express-rate-limit');
 
 const app = express();
+
+app.get('/:path', function(req, res) {
+  let path = req.params.path;
+  if (isValidPath(path))
+    res.sendFile(path);
+});
+
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
@@ -44,7 +52,12 @@ app.use((err, _req, res, _next) => {
   res.status(err.status || 500).send(err.message);
 });
 
-app.get("/oauth/result", function (req, res) {
+const limiter = new rateLimit({
+  windowMs: 1*60*1000, // 1 minute
+  max: 15
+});
+
+app.get("/oauth/result", limiter, function (req, res) {
   const { success } = req.query;
 
   if (success === "true") {
@@ -56,5 +69,5 @@ app.get("/oauth/result", function (req, res) {
 
 const port = process.env.PORT || 8081;
 app.listen(port, () => {
-  console.log(`Custom widget example: listening on port ${port}`);
+  console.log(`Zendesk Happeo CustomWidget server example: listening on port ${port}`);
 });

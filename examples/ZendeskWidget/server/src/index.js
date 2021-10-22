@@ -12,10 +12,9 @@ var rateLimit = require('express-rate-limit');
 
 const app = express();
 
-app.get('/:path', function(req, res) {
-  let path = req.params.path;
-  if (isValidPath(path))
-    res.sendFile(path);
+const limiter = new rateLimit({
+  windowMs: 1*60*1000, // 1 minute
+  max: 15
 });
 
 app.use(cors());
@@ -52,10 +51,6 @@ app.use((err, _req, res, _next) => {
   res.status(err.status || 500).send(err.message);
 });
 
-const limiter = new rateLimit({
-  windowMs: 1*60*1000, // 1 minute
-  max: 15
-});
 
 app.get("/oauth/result", limiter, function (req, res) {
   const { success } = req.query;

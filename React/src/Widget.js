@@ -4,27 +4,36 @@ import widgetSDK from "@happeo/widget-sdk";
 
 import { LinkExternal } from "@happeouikit/form-elements";
 import { margin200, padding300 } from "@happeouikit/layout";
-import { gray09 } from "@happeouikit/colors";
+import { navy, gray09 } from "@happeouikit/colors";
 import { TextDelta, BodyUI } from "@happeouikit/typography";
 
-const Widget = ({ id, editMode }) => {
+const Widget = ({ id /*editMode*/ }) => {
+  const [, /*widgetApi*/ setWidgetApi] = useState();
+  const [user, setUser] = useState();
+
   useEffect(() => {
     const doInit = async () => {
       // Init API
       const widgetApi = await widgetSDK.api.init(id);
 
       // Do stuff
-      await widgetApi.getCurrentUser();
-      console.log("I am all good and ready to go!");
+      const user = await widgetApi.getCurrentUser();
       setWidgetApi(widgetApi);
+      setUser(user);
     };
-  }, [editMode, id]);
+    doInit();
+  }, [id]);
 
   return (
     <Container>
+      <BodyUI style={{ color: navy, marginBottom: margin200 }}>
+        {user ? `Hi, ${user.name.fullName}!` : "initializing..."}
+      </BodyUI>
+
       <TextDelta style={{ marginBottom: margin200 }}>
         Happeo custom widget
       </TextDelta>
+
       <BodyUI>Useful resources</BodyUI>
       <StyledUl>
         <li>

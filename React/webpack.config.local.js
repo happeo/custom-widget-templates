@@ -50,6 +50,7 @@ module.exports = (env) => {
       contentBase: "./dist",
       hot: false,
       inline: false,
+      open: true,
     },
     resolve: {
       extensions: [".tsx", ".ts", ".js"],

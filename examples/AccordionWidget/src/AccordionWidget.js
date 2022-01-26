@@ -164,13 +164,17 @@ const AccordionWidget = ({ id, editMode }) => {
                       style={{ marginRight: margin300, flexShrink: 0 }}
                     />
 
-                    <ContentRenderer content={item[0]} type="html" />
+                    <div className="fr-view">
+                      <ContentRenderer content={item[0]} type="html" />
+                    </div>
                   </AccordionItemButton>
                 </AccordionItemHeading>
                 <AccordionItemPanel
                   style={{ backgroundColor: settings?.contentBackgroundColor }}
                 >
-                  <ContentRenderer content={item[1]} type="html" />
+                  <div className="fr-view">
+                    <ContentRenderer content={item[1]} type="html" />
+                  </div>
                 </AccordionItemPanel>
               </AccordionItem>
             ))}

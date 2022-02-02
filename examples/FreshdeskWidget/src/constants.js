@@ -57,7 +57,7 @@ export const WIDGET_SETTINGS = [
     placeholder: "Prefill fields (JSON)",
     key: SETTINGS_KEYS.prefillFields,
     value: JSON.stringify({
-      subject: "Damaged order",
+      subject: "Ticket from Happeo",
     }),
     type: "text",
   },

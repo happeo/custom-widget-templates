@@ -74,7 +74,7 @@ export const WIDGET_SETTINGS = [
     type: "text",
   },
   {
-    placeholder: "Disable fields (JSON)",
+    placeholder: "Hide choices in dropdown fields (JSON)",
     key: SETTINGS_KEYS.hideChoiceFields,
     value: "",
     type: "text",

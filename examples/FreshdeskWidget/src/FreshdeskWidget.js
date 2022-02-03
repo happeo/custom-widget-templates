@@ -6,6 +6,7 @@ import { padding300 } from "@happeouikit/layout";
 import { ButtonPrimary } from "@happeouikit/buttons";
 import { gray09 } from "@happeouikit/colors";
 import { TextZeta, BodyUI } from "@happeouikit/typography";
+import { LinkExternal } from "@happeouikit/form-elements";
 import { SETTINGS_KEYS, WIDGET_SETTINGS } from "./constants";
 import { applySettings, loadScript, validateJSON } from "./utils";
 
@@ -25,7 +26,6 @@ const FreshdeskWidget = ({ id, editMode }) => {
 
       const user = await api.getCurrentUser();
       setUser(user);
-      setWidgetApi(api);
       setInitialized(true);
     };
     doInit();
@@ -107,10 +107,14 @@ const FreshdeskWidget = ({ id, editMode }) => {
     <Container>
       {editMode && settings[SETTINGS_KEYS.localHelp] !== "TRUE" && (
         <EditContainer>
-          <TextZeta>Zendesk widget</TextZeta>
+          <TextZeta>Freshdesk widget</TextZeta>
           <BodyUI>
             Click to configure. This message will disappear when exiting page
-            edit -mode.
+            edit -mode. Read more about{" "}
+            <LinkExternal href="https://developers.freshdesk.com/widget-api/">
+              Freshdesk Widget API
+            </LinkExternal>
+            .
           </BodyUI>
         </EditContainer>
       )}

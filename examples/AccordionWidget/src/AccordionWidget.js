@@ -182,8 +182,12 @@ const AccordionWidget = ({ id, editMode }) => {
                         style={{ marginRight: margin300, flexShrink: 0 }}
                       />
 
-                      <div className="fr-view">
-                        <ContentRenderer content={item[0]} type="html" />
+                      <div className="custom-font-styles fr-view">
+                        <ContentRenderer
+                          content={item[0]}
+                          type="html"
+                          widgetType="page"
+                        />
                       </div>
                     </AccordionItemButton>
                   </AccordionItemHeading>
@@ -192,8 +196,12 @@ const AccordionWidget = ({ id, editMode }) => {
                       backgroundColor: settings?.contentBackgroundColor,
                     }}
                   >
-                    <div className="fr-view">
-                      <ContentRenderer content={item[1]} type="html" />
+                    <div className="custom-font-styles fr-view">
+                      <ContentRenderer
+                        content={item[1]}
+                        type="html"
+                        widgetType="page"
+                      />
                     </div>
                   </AccordionItemPanel>
                 </AccordionItem>

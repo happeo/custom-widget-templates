@@ -182,7 +182,7 @@ const AccordionWidget = ({ id, editMode }) => {
                         style={{ marginRight: margin300, flexShrink: 0 }}
                       />
 
-                      <div className="custom-font-styles fr-view">
+                      <div className="custom-font-styles fr-view pages-text">
                         <ContentRenderer
                           content={item[0]}
                           type="html"
@@ -196,7 +196,7 @@ const AccordionWidget = ({ id, editMode }) => {
                       backgroundColor: settings?.contentBackgroundColor,
                     }}
                   >
-                    <div className="custom-font-styles fr-view">
+                    <div className="custom-font-styles fr-view pages-text">
                       <ContentRenderer
                         content={item[1]}
                         type="html"

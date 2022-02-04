@@ -19,7 +19,14 @@ import { ContentRenderer } from "@happeouikit/content-renderer";
 import { WIDGET_SETTINGS } from "./constants";
 import { divideDataIntoRows, parseStringJSON } from "./utils";
 
-const EditRow = ({ item, settings, index, onItemUpdated, removeRow }) => (
+const EditRow = ({
+  item,
+  settings,
+  index,
+  onItemUpdated,
+  removeRow,
+  imageUploadLocation,
+}) => (
   <>
     <EditableAccordionTitle
       style={{ backgroundColor: settings?.headerBackgroundColor }}
@@ -35,6 +42,7 @@ const EditRow = ({ item, settings, index, onItemUpdated, removeRow }) => (
         placeholder="Add title"
         content={item[0]}
         onContentChanged={onItemUpdated}
+        imageUploadLocation={imageUploadLocation}
       />
       <IconButton
         icon={IconDelete}
@@ -55,6 +63,7 @@ const EditRow = ({ item, settings, index, onItemUpdated, removeRow }) => (
         placeholder="Add content"
         content={item[1]}
         onContentChanged={onItemUpdated}
+        imageUploadLocation={imageUploadLocation}
       />
     </EditableAccordionContent>
   </>
@@ -64,6 +73,7 @@ const AccordionWidget = ({ id, editMode }) => {
   const editRef = useRef();
   const [initialized, setInitialized] = useState(false);
   const [items, setItems] = useState([]);
+  const [context, setContext] = useState();
   const [settings, setSettings] = useState({});
   const [widgetApi, setWidgetApi] = useState();
 
@@ -83,9 +93,12 @@ const AccordionWidget = ({ id, editMode }) => {
        * searchable
        */
       const widgetContent = await api.getContent();
+      const context = await api.getContext();
       const parsedContent = parseStringJSON(widgetContent, []);
       const dividedContent = divideDataIntoRows(parsedContent);
+
       setItems(dividedContent);
+      setContext(context);
       setWidgetApi(api);
       setInitialized(true);
 
@@ -127,11 +140,11 @@ const AccordionWidget = ({ id, editMode }) => {
   }
 
   return (
-    <Container>
-      {/* className "custom-font-styles" targets pages custom styles to the components below */}
-      <div className="custom-font-styles">
-        {editMode ? (
-          <widgetSDK.uikit.ProviderWrapper>
+    <widgetSDK.uikit.ProviderWrapper>
+      <Container>
+        {/* className "custom-font-styles" targets pages custom styles to the components below */}
+        <div className="custom-font-styles">
+          {editMode ? (
             <div ref={editRef}>
               {items.map((item, index) => (
                 <EditRow
@@ -141,55 +154,63 @@ const AccordionWidget = ({ id, editMode }) => {
                   onItemUpdated={onItemUpdated}
                   removeRow={removeRow}
                   settings={settings}
+                  imageUploadLocation={{
+                    name: "page",
+                    id: context?.location?.pageId,
+                  }}
                 />
               ))}
             </div>
-          </widgetSDK.uikit.ProviderWrapper>
-        ) : (
-          <Accordion
-            allowMultipleExpanded
-            allowZeroExpanded
-            settings={settings}
-          >
-            {items.map((item, index) => (
-              <AccordionItem key={index}>
-                <AccordionItemHeading>
-                  <AccordionItemButton
-                    style={{ backgroundColor: settings?.headerBackgroundColor }}
-                  >
-                    <IconChevronRight
-                      className="accordion__icon--expand"
-                      width={24}
-                      height={24}
-                      style={{ marginRight: margin300, flexShrink: 0 }}
-                    />
+          ) : (
+            <Accordion
+              allowMultipleExpanded
+              allowZeroExpanded
+              settings={settings}
+            >
+              {items.map((item, index) => (
+                <AccordionItem key={index}>
+                  <AccordionItemHeading>
+                    <AccordionItemButton
+                      style={{
+                        backgroundColor: settings?.headerBackgroundColor,
+                      }}
+                    >
+                      <IconChevronRight
+                        className="accordion__icon--expand"
+                        width={24}
+                        height={24}
+                        style={{ marginRight: margin300, flexShrink: 0 }}
+                      />
 
+                      <div className="fr-view">
+                        <ContentRenderer content={item[0]} type="html" />
+                      </div>
+                    </AccordionItemButton>
+                  </AccordionItemHeading>
+                  <AccordionItemPanel
+                    style={{
+                      backgroundColor: settings?.contentBackgroundColor,
+                    }}
+                  >
                     <div className="fr-view">
-                      <ContentRenderer content={item[0]} type="html" />
+                      <ContentRenderer content={item[1]} type="html" />
                     </div>
-                  </AccordionItemButton>
-                </AccordionItemHeading>
-                <AccordionItemPanel
-                  style={{ backgroundColor: settings?.contentBackgroundColor }}
-                >
-                  <div className="fr-view">
-                    <ContentRenderer content={item[1]} type="html" />
-                  </div>
-                </AccordionItemPanel>
-              </AccordionItem>
-            ))}
-          </Accordion>
+                  </AccordionItemPanel>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
+        </div>
+        {editMode && (
+          <ButtonSecondary
+            style={{ marginTop: margin200 }}
+            text="New item"
+            icon={IconAdd}
+            onClick={addRow}
+          />
         )}
-      </div>
-      {editMode && (
-        <ButtonSecondary
-          style={{ marginTop: margin200 }}
-          text="New item"
-          icon={IconAdd}
-          onClick={addRow}
-        />
-      )}
-    </Container>
+      </Container>
+    </widgetSDK.uikit.ProviderWrapper>
   );
 };
 

@@ -1,5 +1,5 @@
 {
-  "name": "trustpilotwidget",
+  "name": "trustpilot-widget",
   "version": "1.0.0",
   "description": "TrustPilot widget",
   "main": "index.js",

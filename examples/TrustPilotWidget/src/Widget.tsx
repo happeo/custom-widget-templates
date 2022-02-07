@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import widgetSDK from "@happeo/widget-sdk";
+import { Loader } from "@happeouikit/loaders";
 import TrustPilot from "./TrustPilot";
 import {padding300} from "@happeouikit/layout";
 import {gray09} from "@happeouikit/colors";
@@ -51,9 +52,7 @@ const Widget = ({id}: Props) => {
     if (!initialized) {
 
         return (
-            <>
-                <h3>Loading ...</h3>
-            </>
+                <Loader />
         );
     }
 

@@ -10,9 +10,7 @@ const TrustBox = ({businessUnitId= "5ddd3f26dcc430000159acff", templateId= "5419
         if (window.Trustpilot) {
             window.Trustpilot.loadFromElement(ref.current, true);
         }
-    }, []);
-    console.log(businessUnitId)
-    console.log(templateId)
+    }, [businessUnitId, templateId]);
 
     return (
         <div

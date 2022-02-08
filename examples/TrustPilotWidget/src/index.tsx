@@ -8,7 +8,7 @@ class happeoCustomReactWidget extends HTMLElement {
     ReactDOM.render(<Widget id={uniqueId} />, this);
   }
 }
-const slug = "my-test-for-customer-call-lpnop1xmyocd6bypwwoo";
+const slug = "trustpilot-widget-fphcbwvjoygeifpvmnhc-ac";
 
 window.customElements.get(slug) ||
   window.customElements.define(slug, happeoCustomReactWidget);

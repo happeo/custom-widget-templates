@@ -1,9 +1,6 @@
 import React from 'react';
-import { alert } from "@happeouikit/colors";
 import { TextZeta, BodyUI } from "@happeouikit/typography";
 import { LinkExternal } from "@happeouikit/form-elements";
-
-import styled from "styled-components";
 
 const TrustBox = ({businessUnitId= "", templateId= ""}) => {
     // Create a reference to the <div> element which will represent the TrustBox
@@ -48,13 +45,6 @@ const TrustBox = ({businessUnitId= "", templateId= ""}) => {
         </div>
 
     )
-
-
-
-
-
 };
-const Error = styled.div`
-  color: ${alert};
-`;
+
 export default TrustBox;

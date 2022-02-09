@@ -20,13 +20,13 @@ export const WIDGET_SETTINGS = [
     },
     {
         placeholder: "Read more about business unit id",
-        key: "businessUnitIdLink",
+        key: SETTINGS_KEYS.businessUnitIdLink,
         value: "https://documentation-apidocumentation.trustpilot.com/faq#q2",
         type: "help-link",
     },
     {
         placeholder: "Read more about Trustpilot widgets",
-        key: "trustpilotWidgetLink",
+        key: SETTINGS_KEYS.trustpilotWidgetLink,
         value: "https://support.trustpilot.com/hc/en-us/articles/360035128794-Introduction-to-TrustBox-widgets",
         type: "help-link",
     }

@@ -1,9 +1,4 @@
 import React from 'react';
-import { alert } from "@happeouikit/colors";
-import { TextZeta, BodyUI } from "@happeouikit/typography";
-import { LinkExternal } from "@happeouikit/form-elements";
-
-import styled from "styled-components";
 
 const TrustBox = ({businessUnitId= "", templateId= ""}) => {
     // Create a reference to the <div> element which will represent the TrustBox
@@ -17,8 +12,8 @@ const TrustBox = ({businessUnitId= "", templateId= ""}) => {
         }
     }, [businessUnitId, templateId]);
 
-    if(businessUnitId && templateId) {
-        return (
+    return (
+        <div>
             <div
                 ref={ref} // We need a reference to this element to load the TrustBox in the effect.
                 className="trustpilot-widget" // Renamed this to className.
@@ -32,29 +27,10 @@ const TrustBox = ({businessUnitId= "", templateId= ""}) => {
                 <a href="https://www.trustpilot.com/review/example.com" target="_blank" rel="noopener"> Trustpilot
                 </a>
             </div>
-        );
-    }
-    return (
-        <div>
-            <TextZeta>Trustpilot widget</TextZeta>
-            <BodyUI>
-                Please provide your business unit id and template id.
-                Read more about{" "}
-                <LinkExternal href="https://support.trustpilot.com/hc/en-us/articles/360035128794-Introduction-to-TrustBox-widgets">
-                    Trustpilot Widgets
-                </LinkExternal>
-                .
-            </BodyUI>
         </div>
 
-    )
-
-
-
-
+    );
 
 };
-const Error = styled.div`
-  color: ${alert};
-`;
+
 export default TrustBox;

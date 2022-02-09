@@ -79,7 +79,6 @@
     "styled-components": "^4.4.1"
   },
   "dependencies": {
-    "@happeo/widget-sdk": "^0.2.0",
-    "@typeform/embed-react": "^1.2.4"
+    "@happeo/widget-sdk": "^0.2.0"
   }
 }

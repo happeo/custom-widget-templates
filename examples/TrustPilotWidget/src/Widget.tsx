@@ -5,6 +5,8 @@ import { Loader } from "@happeouikit/loaders";
 import TrustPilot from "./TrustPilot";
 import {padding300} from "@happeouikit/layout";
 import {gray09} from "@happeouikit/colors";
+import { TextZeta, BodyUI } from "@happeouikit/typography";
+import { LinkExternal } from "@happeouikit/form-elements";
 import {WIDGET_SETTINGS} from "./constants";
 
 interface Props {
@@ -54,6 +56,24 @@ const Widget = ({id}: Props) => {
         return (
                 <Loader />
         );
+    }
+
+
+    if(!settings.businessUnitId || !settings.templateId) {
+        return (
+            <div >
+                <TextZeta>Trustpilot widget</TextZeta>
+                <BodyUI>
+                    Please provide your business unit id and template id.
+                    Read more about{" "}
+                    <LinkExternal href="https://support.trustpilot.com/hc/en-us/articles/360035128794-Introduction-to-TrustBox-widgets">
+                        Trustpilot Widgets
+                    </LinkExternal>
+                    .
+                </BodyUI>
+            </div>
+
+        )
     }
 
     return (

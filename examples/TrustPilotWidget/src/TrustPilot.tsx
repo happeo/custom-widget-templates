@@ -28,9 +28,8 @@ const TrustBox = ({businessUnitId= "", templateId= ""}) => {
                 </a>
             </div>
         </div>
-
-    );
-
+    )
 };
+
 
 export default TrustBox;

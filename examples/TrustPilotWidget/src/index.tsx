@@ -8,6 +8,7 @@ class happeoCustomReactWidget extends HTMLElement {
     ReactDOM.render(<Widget id={uniqueId} />, this);
   }
 }
+
 const slug = "trustpilot-widget-fphcbwvjoygeifpvmnhc-ac";
 
 window.customElements.get(slug) ||

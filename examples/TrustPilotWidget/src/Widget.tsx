@@ -58,6 +58,12 @@ const Widget = ({id}: Props) => {
                 <TextZeta>Trustpilot widget</TextZeta>
                 <BodyUI>
                     Please provide your business unit id and template id.
+                </BodyUI>
+                <BodyUI>
+                    To find the Business Unit ID and Template ID, generate a Trustpilot widget as you usually
+                    would and find the <b>data-template-id</b> and <b>data-businuessunit-id</b> in the HTML code, and enter them in the panel on the right.
+                </BodyUI>
+                <BodyUI>
                     Read more about{" "}
                     <LinkExternal href="https://support.trustpilot.com/hc/en-us/articles/360035128794-Introduction-to-TrustBox-widgets">
                         Trustpilot Widgets

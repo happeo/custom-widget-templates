@@ -3,8 +3,7 @@ import styled from "styled-components";
 import widgetSDK from "@happeo/widget-sdk";
 import { Loader } from "@happeouikit/loaders";
 import TrustPilot from "./TrustPilot";
-import {padding300} from "@happeouikit/layout";
-import {gray09} from "@happeouikit/colors";
+import { padding300 } from "@happeouikit/layout";
 import { TextZeta, BodyUI } from "@happeouikit/typography";
 import { LinkExternal } from "@happeouikit/form-elements";
 import {WIDGET_SETTINGS} from "./constants";
@@ -15,9 +14,7 @@ interface Props {
 
 interface WidgetAPI {
     setSettings: (settings: object) => Promise<void>;
-
     getSettings(): Promise<{ [key: string]: any }>;
-
     declareSettings(_: object, callback: Function): Promise<void>;
 }
 
@@ -32,9 +29,7 @@ const Widget = ({id}: Props) => {
         const doInit = async () => {
             // Init API
             const api = (await widgetSDK.api.init(id)) as WidgetAPI;
-
             await api.declareSettings(WIDGET_SETTINGS, setSettings);
-
             setInitialized(true);
         };
         doInit();
@@ -52,12 +47,10 @@ const Widget = ({id}: Props) => {
     }, [id]);
 
     if (!initialized) {
-
         return (
                 <Loader />
         );
     }
-
 
     if(!settings.businessUnitId || !settings.templateId) {
         return (
@@ -72,7 +65,6 @@ const Widget = ({id}: Props) => {
                     .
                 </BodyUI>
             </div>
-
         )
     }
 
@@ -85,7 +77,6 @@ const Widget = ({id}: Props) => {
 
 const Container = styled.div`
   padding: ${padding300};
-  background-color: ${gray09};
 `;
 
 export default Widget;

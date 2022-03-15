@@ -2,6 +2,7 @@ import { LOCALES } from "./locales";
 
 export const SETTINGS_KEYS = {
   widgetId: "widget_id",
+  widgetUrl: "widget_url",
   locale: "locale",
   globalHelp: "show_global_help",
   localHelp: "show_button",
@@ -16,6 +17,12 @@ export const WIDGET_SETTINGS = [
   {
     placeholder: "Freshdesk widget id",
     key: SETTINGS_KEYS.widgetId,
+    value: "",
+    type: "text",
+  },
+  {
+    placeholder: "Freshdesk widget url - e.g https://widget.freshworks.com/widgets/1234.js",
+    key: SETTINGS_KEYS.widgetUrl,
     value: "",
     type: "text",
   },

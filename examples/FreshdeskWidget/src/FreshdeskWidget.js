@@ -37,13 +37,14 @@ const FreshdeskWidget = ({ id, editMode }) => {
     }
 
     window.fwSettings = {
-      widget_id: settings[SETTINGS_KEYS.widgetId],
-      locale:
+        widget_id: settings[SETTINGS_KEYS.widgetId],
+        widget_url: settings[SETTINGS_KEYS.widgetUrl],
+        locale:
         settings[SETTINGS_KEYS.locale] !== "browser" &&
         settings[SETTINGS_KEYS.locale],
     };
 
-    loadScript(settings[SETTINGS_KEYS.widgetId]).then(
+    loadScript(settings[SETTINGS_KEYS.widgetId], settings[SETTINGS_KEYS.widgetUrl]).then(
       applySettings(0, () => {
         // Mount if necessary, if not checked this will crash
         if (requiresMount.current) {

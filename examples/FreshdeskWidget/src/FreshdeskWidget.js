@@ -116,8 +116,6 @@ const FreshdeskWidget = ({id, editMode}) => {
         return null;
     }
 
-    console.log("AM I STILL HERE?")
-
     return (
         <Container>
             {editMode && settings[SETTINGS_KEYS.localHelp] !== "TRUE" && (

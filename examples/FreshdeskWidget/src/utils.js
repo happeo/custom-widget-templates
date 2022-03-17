@@ -20,13 +20,24 @@ export const loadScript = (widgetId, widgetUrl) =>
             }
             reject();
         };
-        if (widgetId && !widgetUrl) {
+        const euFreshDesk = widgetId && !widgetUrl;
+        const comboFreshdeskAndUrl = widgetId && widgetUrl && widgetUrl.includes(widgetId);
+        if (euFreshDesk) {
             script.src = `https://euc-widget.freshworks.com/widgets/${widgetId}.js`;
         }
-        if(widgetId && widgetUrl) {
+        if(comboFreshdeskAndUrl) {
             script.src = widgetUrl;
         }
-        document.getElementsByTagName("head")[0].appendChild(script);
+        if(script.src){
+            document.getElementsByTagName("head")[0].appendChild(script);
+        } else {
+            // if src is not set reject for cleanup in the parent
+            const errEl = document.getElementById(id);
+            if (errEl) {
+                errEl.parentNode.removeChild(errEl);
+            }
+            reject();
+        }
     });
 
 export const validateJSON = (json = "") => {

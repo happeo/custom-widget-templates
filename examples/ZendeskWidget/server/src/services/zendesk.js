@@ -78,9 +78,89 @@ const fetchUserById = async (id, accessToken) => {
   return await user.json();
 };
 
+const fetchArticles = async (articleId, accessToken, locale = 'en-us') => {
+  const localeString = locale ? `/${locale}` : '';
+  const url = new URL(`${BASE_URL}/api/v2/help_center${localeString}/articles/${articleId}`);
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const articleList = await fetch(url, options);
+  return await articleList.json();
+};
+
+// TODO We have to handle locale based on document's language
+// each request should be sent with locale value like "en-us"
+const fetchCategories = async (page = 1, accessToken) => {
+  const pageNumber = Number.parseInt(page, 10);
+  const searchParams = new URLSearchParams({ sort_by: 'position', position: pageNumber });
+  const url = new URL(`${BASE_URL}/api/v2/help_center/en-us/categories?${searchParams}`);
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const categories = await fetch(url, options);
+  return await categories;
+};
+
+const fetchSections = async (categoryId, page = 1, accessToken) => {
+  const pageNumber = Number.parseInt(page, 10);
+  const searchParams = new URLSearchParams({ sort_by: 'position', position: pageNumber });
+  const url = new URL(`${BASE_URL}/api/v2/help_center/categories/${categoryId}/sections?${searchParams}`);
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const sections = await fetch(url, options);
+  return await sections;
+};
+
+const fetchSectionArticles = async (sectionId, page = 1, accessToken) => {
+  const pageNumber = Number.parseInt(page, 10);
+  const searchParams = new URLSearchParams({ sort_by: 'position', position: pageNumber });
+  const url = new URL(`${BASE_URL}/api/v2/help_center/sections/${sectionId}/articles?${searchParams}`);
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const articles = await fetch(url, options);
+  return await articles;
+};
+
+const fetchSearch = async (query, accessToken, locale = 'en-us') => {
+  const searchParams = new URLSearchParams({ query, 'filter[locales]': locale, result_type: 'article' });
+  const url = new URL(`${BASE_URL}/api/v2/help_center/articles/search?${searchParams}`);
+  const options = {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const articles = await fetch(url, options);
+  return await articles;
+};
+
 module.exports = {
   exchangeCodeToToken,
   fetchTickets,
   createNewTicket,
   fetchUserById,
+  fetchArticles,
+  fetchCategories,
+  fetchSections,
+  fetchSectionArticles,
+  fetchSearch,
 };

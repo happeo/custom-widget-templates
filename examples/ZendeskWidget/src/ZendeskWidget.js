@@ -4,8 +4,10 @@ import styled from "styled-components";
 import widgetSDK from "@happeo/widget-sdk";
 import { WIDGET_SETTINGS } from "./constants";
 
+import Article from "./Article";
 import { TicketList } from "./TicketList";
 import { SubmitTicket } from "./SubmitTicket";
+import DrillDownSection from "./DrillDownSection";
 
 const ZendeskWidget = ({ id, editMode }) => {
   const [initialized, setInitialized] = useState(false);
@@ -32,7 +34,13 @@ const ZendeskWidget = ({ id, editMode }) => {
 
   return (
     <Container>
-      {settings.widgetType !== "submit" && <TicketList widgetApi={widgetApi} />}
+      {settings.widgetType === "helpCenter" && (
+        <DrillDownSection variant="categories" widgetApi={widgetApi} />
+      )}
+      {settings.widgetType === "article" && (
+        <Article id="4547921894929-Article-12" widgetApi={widgetApi} />
+      )}
+      {settings.widgetType === "list" && <TicketList widgetApi={widgetApi} />}
       {settings.widgetType === "submit" && (
         <SubmitTicket widgetApi={widgetApi} editMode={editMode} />
       )}

@@ -4,12 +4,12 @@
   "version": "1.0.0",
   "scripts": {
     "start": "nodemon src/index.js",
+    "debug": "nodemon --inspect src/index.js",
     "deploy": "gcloud builds submit --tag gcr.io/{YOUR GCP PROJECT URL HERE}"
   },
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.5.0",
     "http-errors": "^1.8.0",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "concurrently": "^6.2.1",
+    "dotenv": "^10.0.0",
     "nodemon": "^2.0.12"
   },
   "engines": {

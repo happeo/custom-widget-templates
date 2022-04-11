@@ -16,6 +16,14 @@ export const WIDGET_SETTINGS = [
         label: "Submit tickets",
         value: "submit",
       },
+      {
+        label: "Article view",
+        value: "article",
+      },
+      {
+        label: "Help Center",
+        value: "helpCenter",
+      },
     ],
     type: "dropdown",
   },

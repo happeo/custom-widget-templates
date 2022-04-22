@@ -62,8 +62,8 @@ const YoutubeWidget = ({ id, editMode, trigger }: Props) => {
   );
 
   useEffect(() => {
-    if (trigger) onUrlChanged(trigger);
-  }, [trigger]);
+    if (trigger && initialized) onUrlChanged(trigger);
+  }, [trigger, initialized]);
 
   const scrapeDebounce = async (url, api, settings) => {
     const decodedUrl = decodeHtmlEntities(url).replace(/\\/gi, "");
@@ -141,7 +141,7 @@ const YoutubeWidget = ({ id, editMode, trigger }: Props) => {
               <FormLabel htmlFor="youtube-url-url">Enter url</FormLabel>
               <Input
                 id="youtube-url-input"
-                value={settings.videoUrl}
+                value={settings.videoUrl || ""}
                 autoComplete="off"
                 state={!isValid && "error"}
                 errorMessage={!isValid && "URL not valid Youtube url."}

@@ -37,6 +37,7 @@ declare module "@happeouikit/typography" {
 declare module "@happeouikit/theme" {
   export declare const radius500: string;
   export declare const animationFast: string;
+  export declare const animationSlow: string;
   export declare const animationCurve: string;
   export declare const fadeIn: string;
   export declare const fadeInOut: string;

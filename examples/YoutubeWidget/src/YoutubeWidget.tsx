@@ -1,13 +1,14 @@
 import debounce from "lodash.debounce";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import widgetSDK from "@happeo/widget-sdk";
-import { ButtonPrimary, ButtonSecondary } from "@happeouikit/buttons";
+import { ButtonPrimary } from "@happeouikit/buttons";
 import { gray01, gray09 } from "@happeouikit/colors";
 import { Input } from "@happeouikit/form-elements";
 import { Loader } from "@happeouikit/loaders";
 import { TextDelta } from "@happeouikit/typography";
+import { fadeIn, animationCurve, animationFast } from "@happeouikit/theme";
 
 import { WIDGET_SETTINGS } from "./constants";
 import { getVideoId, decodeHtmlEntities } from "./utils";
@@ -72,7 +73,7 @@ const YoutubeWidget = ({ id, editMode, trigger }: Props) => {
     const { data } = await api.metaScaperExtract(decodedUrl);
     const videoId = getVideoId(decodedUrl);
     setLoading(false);
-    setSettings({
+    const newSettings = {
       ...settings,
       videoId,
       title: data?.data?.title || "",
@@ -81,7 +82,11 @@ const YoutubeWidget = ({ id, editMode, trigger }: Props) => {
       thumbnail: {
         url: data.data.image,
       },
-    });
+    };
+    setSettings(newSettings);
+    if (trigger) {
+      api!.setSettings(newSettings);
+    }
   };
   const debounceFn = useCallback(
     debounce(
@@ -115,7 +120,7 @@ const YoutubeWidget = ({ id, editMode, trigger }: Props) => {
   if (editMode) {
     return (
       <>
-        <Flex style={{ height: "100%" }}>
+        <FadeIn style={{ height: "100%" }}>
           <ContainerLeft>
             <Flex style={{ flexDirection: "column" }}>
               <Logo />
@@ -189,7 +194,7 @@ const YoutubeWidget = ({ id, editMode, trigger }: Props) => {
               </Flex>
             </Flex>
           </ContainerRight>
-        </Flex>
+        </FadeIn>
       </>
     );
   }
@@ -247,6 +252,11 @@ export const FormLabel = styled.label`
 
 const Flex = styled.div`
   display: flex;
+`;
+
+const FadeIn = styled.div`
+  display: flex;
+  animation: ${fadeIn} ${animationFast} ${animationCurve};
 `;
 
 const ContainerRight = styled.div`

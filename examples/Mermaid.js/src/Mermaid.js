@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import mermaid from "mermaid";
+import { useZoomPan } from "./useZoomPan";
 
 mermaid.initialize({
   startOnLoad: true,
@@ -50,14 +51,20 @@ mermaid.initialize({
       stroke: #f8f8f2;
       stroke-width: 1;
     }`,
-  fontFamily: "Fira Code"
+  fontFamily: "Fira Code",
 });
 
-export default class Mermaid extends React.Component {
-  componentDidMount() {
+const CONTAINER_CLASSNAME = "mermaid";
+
+const Mermaid = (props) => {
+  const [initialized, setInitialized] = useState(false);
+  useZoomPan({ initialized });
+  useEffect(() => {
     mermaid.contentLoaded();
-  }
-  render() {
-    return <div className="mermaid">{this.props.chart}</div>;
-  }
-}
+    setInitialized(true);
+  }, []);
+
+  return <div className={CONTAINER_CLASSNAME}>{props.chart}</div>;
+};
+
+export default Mermaid;

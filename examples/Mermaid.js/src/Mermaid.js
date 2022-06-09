@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import mermaid from "mermaid";
 import { useZoomPan } from "./useZoomPan";
 
@@ -64,7 +65,17 @@ const Mermaid = (props) => {
     setInitialized(true);
   }, []);
 
-  return <div className={CONTAINER_CLASSNAME}>{props.chart}</div>;
+  return (
+    <Container style={{ width: "100%" }} className={CONTAINER_CLASSNAME}>
+      {props.chart}
+    </Container>
+  );
 };
+
+const Container = styled.div`
+  svg {
+    width: 100%;
+  }
+`;
 
 export default Mermaid;

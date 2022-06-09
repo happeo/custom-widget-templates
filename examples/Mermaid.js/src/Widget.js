@@ -26,11 +26,21 @@ const Widget = ({ id /*editMode*/ }) => {
     doInit();
   }, [id]);
 
-  return ( 
-  <div className="App">
-  <h1>React Mermaid Example</h1>
-  <Mermaid chart={example} />
-</div>
+  const [mermaid, setMermaid] = useState("");
+
+  const onChangeHandler = (event) => {
+    setMermaid(event.target.value);
+  };
+
+  return (
+    <div className="App">
+      <textarea style={{ height: "400px" }} onChange={onChangeHandler}>
+        {mermaid}
+      </textarea>
+      <h1>React Mermaid Example</h1>
+      <pre>{mermaid}</pre>
+      <Mermaid key={mermaid} chart={mermaid} />
+    </div>
   );
 };
 

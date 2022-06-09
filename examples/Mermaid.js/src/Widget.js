@@ -40,7 +40,11 @@ const Widget = ({ id, editMode }) => {
   return (
     <Container className="App">
       {editMode && (
-        <textarea style={{ height: "400px" }} onChange={onChangeHandler}>
+        <textarea
+          style={{ height: "400px" }}
+          value={settings.content}
+          onChange={onChangeHandler}
+        >
           {settings.content}
         </textarea>
       )}

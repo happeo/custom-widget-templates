@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import widgetSDK from "@happeo/widget-sdk";
+import Mermaid from "./Mermaid";
+import example from "./example";
 
 import { LinkExternal } from "@happeouikit/form-elements";
 import { margin200, padding300 } from "@happeouikit/layout";
@@ -24,41 +26,11 @@ const Widget = ({ id /*editMode*/ }) => {
     doInit();
   }, [id]);
 
-  return (
-    <Container>
-      <BodyUI style={{ color: navy, marginBottom: margin200 }}>
-        {user ? `Hi, ${user.name.fullName}!` : "initializing..."}
-      </BodyUI>
-
-      <TextDelta style={{ marginBottom: margin200 }}>
-        MermaidJs custom widget
-      </TextDelta>
-
-      <BodyUI>Useful resources</BodyUI>
-      <StyledUl>
-        <li>
-          <BodyUI>
-            <LinkExternal href="https://github.com/happeo/custom-widget-templates">
-              Custom widget templates
-            </LinkExternal>
-          </BodyUI>
-        </li>
-        <li>
-          <BodyUI>
-            <LinkExternal href="https://github.com/happeo/widgets-sdk">
-              Widget SDK
-            </LinkExternal>
-          </BodyUI>
-        </li>
-        <li>
-          <BodyUI>
-            <LinkExternal href="https://uikit.happeo.com/">
-              Happeo UI kit
-            </LinkExternal>
-          </BodyUI>
-        </li>
-      </StyledUl>
-    </Container>
+  return ( 
+  <div className="App">
+  <h1>React Mermaid Example</h1>
+  <Mermaid chart={example} />
+</div>
   );
 };
 

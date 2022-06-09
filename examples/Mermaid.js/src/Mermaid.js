@@ -74,6 +74,7 @@ const Mermaid = (props) => {
 
 const Container = styled.div`
   svg {
+    max-width: 1000px !important;
     width: 100%;
   }
 `;

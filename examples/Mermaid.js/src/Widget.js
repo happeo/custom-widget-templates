@@ -40,16 +40,16 @@ const Widget = ({ id, editMode }) => {
   return (
     <Container className="App">
       {editMode && (
-        <textarea
-          style={{ height: "400px" }}
-          value={settings.content}
-          onChange={onChangeHandler}
-        >
-          {settings.content}
-        </textarea>
+        <div>
+          <textarea
+            style={{ height: "400px" }}
+            value={settings.content}
+            onChange={onChangeHandler}
+          >
+            {settings.content}
+          </textarea>
+        </div>
       )}
-      <h1>React Mermaid Example</h1>
-      <pre>{settings.content}</pre>
       <Mermaid key={settings.content} chart={settings.content} />
     </Container>
   );

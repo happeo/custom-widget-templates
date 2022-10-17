@@ -108,12 +108,14 @@ const AccordionWidget = ({ id, editMode }) => {
         data.push(el.getContent());
       });
       widgetApi.setContent(JSON.stringify(data));
+      setItems(divideDataIntoRows(data));
     },
     200,
     { leading: false, trailing: true },
   );
 
   const removeRow = (index) => {
+    onItemUpdated();
     setItems((prevItems) => prevItems.filter((_, i) => i !== index));
   };
 

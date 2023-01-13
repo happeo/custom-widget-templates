@@ -78,7 +78,7 @@ const YoutubeWidget = ({ id, editMode, trigger }: Props) => {
       videoId,
       title: data?.data?.title || "",
       description: data?.data?.description || "",
-      url: `https://www.youtube.com/watch?v=${videoId}`,
+      url: decodedUrl,
       thumbnail: {
         url: data.data.image,
       },

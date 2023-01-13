@@ -76,7 +76,7 @@ const GoogleFormsWidget = ({ id, editMode, trigger }: Props) => {
       formId,
       title: data?.data?.title || "",
       description: data?.data?.title || "",
-      url,
+      url: text,
       thumbnail: {
         url: data.data.image,
       },

@@ -47,9 +47,10 @@ module.exports = (env) => {
       ],
     },
     devServer: {
-      contentBase: "./dist",
+      static: {
+        directory: "./dist",
+      },
       hot: false,
-      inline: false,
       open: true,
     },
     resolve: {

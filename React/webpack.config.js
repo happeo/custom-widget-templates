@@ -7,9 +7,7 @@ module.exports = (env) => {
   return {
     entry: path.join(__dirname, "src", "index.js"),
     mode: isProd ? "production" : "development",
-    plugins: [
-      new webpack.EnvironmentPlugin({MOCK_WIDGET_SDK: false}),
-    ],
+    plugins: [new webpack.EnvironmentPlugin({ MOCK_WIDGET_SDK: false })],
     module: {
       rules: [
         {
@@ -39,16 +37,6 @@ module.exports = (env) => {
       extensions: [".tsx", ".ts", ".js"],
     },
     externals: [
-      ({context, request}, callback) => {
-        if (/^@happeouikit/.test(request)) {
-          // Resolve @happeoukit as externals in window
-          return callback(null, [
-            "Happeouikit",
-            request.replace("@happeouikit/", ""),
-          ]);
-        }
-        callback();
-      },
       {
         react: "React",
         "react-dom": "ReactDOM",

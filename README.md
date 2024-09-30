@@ -25,7 +25,9 @@ TODO: Finalise this
 
 #### React
 
-The react template for the widget sits very nicely inside Happeo. Since we use React in our frontend, it also shares bunch of libraries with our main app, but you can of course `npm install` whatever libraries you want to your widget.
+The react template for the widget sits very nicely inside Happeo. Since we use React in our frontend, it also shares some of libraries with our main app, but you can of course `npm install` whatever libraries you want to your widget.
+
+Our [HappeoUIKit](https://uikit.happeo.com/) packages enable seamless integration with the Happeo platform, providing you with the necessary ui components to build your widget efficiently.
 
 Start by opening the React -folder, opening the `index.js` -file and replace the `"my-widget-slug"` with the `slug` you got from step 2.
 

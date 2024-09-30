@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import widgetSDK from "@happeo/widget-sdk";
-
-import { LinkExternal } from "@happeouikit/form-elements";
-import { margin200, padding300 } from "@happeouikit/layout";
-import { navy, gray09 } from "@happeouikit/colors";
-import { TextDelta, BodyUI } from "@happeouikit/typography";
 
 const Widget = ({ id /*editMode*/ }) => {
   const [, /*widgetApi*/ setWidgetApi] = useState();
@@ -25,50 +19,52 @@ const Widget = ({ id /*editMode*/ }) => {
   }, [id]);
 
   return (
-    <Container>
-      <BodyUI style={{ color: navy, marginBottom: margin200 }}>
+    <div styled={{ padding: "16px", backgroundColor: "#F7F9FB" }}>
+       
+      <p style={{ fontSize: "14px", color: "#1A5D8D", marginBottom: "12px" }}>
         {user ? `Hi, ${user.name.fullName}!` : "initializing..."}
-      </BodyUI>
-
-      <TextDelta style={{ marginBottom: margin200 }}>
+      </p>
+      <h2
+        style={{ fontSize: "20px", lineHeight: "28px", marginBottom: "12px" }}
+      >
         Happeo custom widget
-      </TextDelta>
-
-      <BodyUI>Useful resources</BodyUI>
-      <StyledUl>
+      </h2>
+      <p>Useful resources</p>
+      <ul
+        style={{
+          marginTop: "16px",
+          listStyle: "disc",
+          padding: "16px;",
+          gap: "8px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <li>
-          <BodyUI>
-            <LinkExternal href="https://github.com/happeo/custom-widget-templates">
+          <p>
+            <a
+              target="_blank"
+              rel="nofollow noopener"
+              href="https://github.com/happeo/custom-widget-templates"
+            >
               Custom widget templates
-            </LinkExternal>
-          </BodyUI>
+            </a>
+          </p>
         </li>
         <li>
-          <BodyUI>
-            <LinkExternal href="https://github.com/happeo/widgets-sdk">
+          <p>
+            <a
+              target="_blank"
+              rel="nofollow noopener"
+              href="https://github.com/happeo/widgets-sdk"
+            >
               Widget SDK
-            </LinkExternal>
-          </BodyUI>
+            </a>
+          </p>
         </li>
-        <li>
-          <BodyUI>
-            <LinkExternal href="https://uikit.happeo.com/">
-              Happeo UI kit
-            </LinkExternal>
-          </BodyUI>
-        </li>
-      </StyledUl>
-    </Container>
+      </ul>
+    </div>
   );
 };
-
-const Container = styled.div`
-  padding: ${padding300};
-  background-color: ${gray09};
-`;
-const StyledUl = styled.ul`
-  list-style: disc;
-  padding: ${padding300};
-`;
 
 export default Widget;

@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = (env) => {
   const isProd = env.production;
@@ -6,6 +7,9 @@ module.exports = (env) => {
   return {
     entry: path.join(__dirname, "src", "index.ts"),
     mode: isProd ? "production" : "development",
+    plugins: isProd
+      ? []
+      : [new webpack.EnvironmentPlugin({ MOCK_WIDGET_SDK: true })],
     module: {
       rules: [
         {
@@ -24,11 +28,6 @@ module.exports = (env) => {
           },
         },
       ],
-    },
-    devServer: {
-      contentBase: "./dist",
-      hot: false,
-      inline: false,
     },
     resolve: {
       extensions: [".ts", ".js"],

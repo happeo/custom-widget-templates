@@ -46,13 +46,6 @@ module.exports = (env) => {
         },
       ],
     },
-    devServer: {
-      static: {
-        directory: "./dist",
-      },
-      hot: false,
-      open: true,
-    },
     resolve: {
       extensions: [".tsx", ".ts", ".js"],
     },

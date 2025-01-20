@@ -20,7 +20,7 @@
     "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
-    "@happeo/widget-sdk": "^0.2.0",
+    "@happeo/widget-sdk": "^0.2.5",
     "lit": "^2.0.0-rc.4"
   }
 }

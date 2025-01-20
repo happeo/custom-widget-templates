@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack serve --config webpack.config.local.js",
+    "dev": "webpack serve --env development",
     "build": "webpack --env production",
-    "start": "webpack serve --env development"
+    "start": "webpack serve --env production"
   },
   "author": "",
   "license": "ISC",
@@ -15,10 +15,9 @@
     "@babel/preset-env": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
     "babel-loader": "^8.2.2",
-    "html-webpack-plugin": "^4.5.2",
-    "webpack": "^4.46.0",
-    "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "^3.11.2"
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
     "@happeo/widget-sdk": "^0.2.0",

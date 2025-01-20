@@ -1,3 +1,5 @@
+import WidgetSDK from "@happeo/widget-sdk";
+
 // Create a class for the element
 class happeoCustomWidget extends HTMLElement {
   constructor() {
@@ -10,6 +12,8 @@ class happeoCustomWidget extends HTMLElement {
     // Create spans
     const wrapper = document.createElement("div");
     wrapper.setAttribute("class", "wrapper");
+
+    wrapper.id = "root";
 
     const title = document.createElement("h1");
     title.innerText = "Happeo custom widget";
@@ -26,7 +30,7 @@ class happeoCustomWidget extends HTMLElement {
       '<p><a href="https://github.com/happeo/custom-widget-templates" target="_blank">Custom widget templates</a></p>';
     item2.innerHTML =
       '<p><a href="https://github.com/happeo/widgets-sdk" target="_blank">Widget SDK</a></p>';
-    item1.innerHTML =
+    item3.innerHTML =
       '<p><a href="https://uikit.happeo.com/" target="_blank">Happeo UI kit</a></p>';
 
     list.appendChild(item1);
@@ -53,6 +57,23 @@ class happeoCustomWidget extends HTMLElement {
     wrapper.appendChild(title);
     wrapper.appendChild(text);
     wrapper.appendChild(list);
+
+    this.doInit();
+  }
+
+  async doInit() {
+    // Init API
+    const widgetApi = await WidgetSDK.api.init(
+      this.attributes.getNamedItem("uniqueId").value
+    );
+
+    // Use the SDK to get user and display it
+    this.user = await widgetApi.getCurrentUser();
+
+    const wrapper = this.shadowRoot.querySelector("#root");
+    const user = document.createElement("p");
+    user.innerText = `Hello ${this.user.name.fullName}!`;
+    wrapper.appendChild(user);
   }
 }
 

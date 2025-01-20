@@ -25,11 +25,7 @@ module.exports = (env) => {
         },
       ],
     },
-    devServer: {
-      contentBase: "./dist",
-      hot: false,
-      inline: false,
-    },
+
     resolve: {
       extensions: [".tsx", ".ts", ".js"],
     },

@@ -7,7 +7,6 @@ module.exports = (env) => {
   return {
     entry: path.join(__dirname, "src", "index.js"),
     mode: isProd ? "production" : "development",
-    plugins: [new webpack.EnvironmentPlugin({ MOCK_WIDGET_SDK: false })],
     module: {
       rules: [
         {
@@ -26,12 +25,6 @@ module.exports = (env) => {
           },
         },
       ],
-    },
-    devServer: {
-      static: {
-        directory: "./dist",
-      },
-      hot: false,
     },
     resolve: {
       extensions: [".tsx", ".ts", ".js"],

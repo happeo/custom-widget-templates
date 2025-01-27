@@ -8,7 +8,7 @@ module.exports = (env) => {
     entry: path.join(__dirname, "src", "index.js"),
     mode: isProd ? "production" : "development",
     plugins: isProd
-      ? []
+      ? [new webpack.EnvironmentPlugin({ MOCK_WIDGET_SDK: false })]
       : [new webpack.EnvironmentPlugin({ MOCK_WIDGET_SDK: true })],
     module: {
       rules: [

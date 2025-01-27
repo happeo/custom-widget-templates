@@ -57,15 +57,15 @@ class happeoCustomWidget extends HTMLElement {
     wrapper.appendChild(title);
     wrapper.appendChild(text);
     wrapper.appendChild(list);
+  }
 
+  connectedCallback() {
     this.doInit();
   }
 
   async doInit() {
     // Init API
-    const widgetApi = await WidgetSDK.api.init(
-      this.attributes.getNamedItem("uniqueId").value
-    );
+    const widgetApi = await WidgetSDK.api.init(this.getAttribute("uniqueId"));
 
     // Use the SDK to get user and display it
     this.user = await widgetApi.getCurrentUser();
